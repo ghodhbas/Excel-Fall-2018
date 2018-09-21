@@ -1,0 +1,63 @@
+# depslib dependency file v1.0
+1537240718 source:/home/ghodhbas/Desktop/project/display.cpp
+	"display.h"
+
+1537240718 /home/ghodhbas/Desktop/project/display.h
+
+1537403872 source:/home/ghodhbas/Desktop/project/camera.cpp
+	"camera.h"
+
+1537404207 /home/ghodhbas/Desktop/project/camera.h
+	<math.h>
+	<GL/glut.h>
+
+1537409796 source:/home/ghodhbas/Desktop/project/main.cpp
+	<stdlib.h>
+	<math.h>
+	<GL/glut.h>
+	"functions.h"
+
+1537472340 /home/ghodhbas/Desktop/project/functions.h
+	<iostream>
+	<math.h>
+	<stdlib.h>
+	"sphere.h"
+	"spherecontainer.h"
+
+1537412677 source:/home/ghodhbas/Desktop/project/sphere.cpp
+	"sphere.h"
+
+1537469671 /home/ghodhbas/Desktop/project/sphere.h
+
+1537468984 source:/home/ghodhbas/Desktop/project/spherecontainer.cpp
+	"spherecontainer.h"
+
+1537470137 /home/ghodhbas/Desktop/project/spherecontainer.h
+	<vector>
+	"sphere.h"
+
+1537409796 source:/home/ghodhbas/Desktop/Excel Fall 2018/main.cpp
+	<stdlib.h>
+	<math.h>
+	<GL/glut.h>
+	"functions.h"
+
+1537472340 /home/ghodhbas/Desktop/Excel Fall 2018/functions.h
+	<iostream>
+	<math.h>
+	<stdlib.h>
+	"sphere.h"
+	"spherecontainer.h"
+
+1537469671 /home/ghodhbas/Desktop/Excel Fall 2018/sphere.h
+
+1537470137 /home/ghodhbas/Desktop/Excel Fall 2018/spherecontainer.h
+	<vector>
+	"sphere.h"
+
+1537412677 source:/home/ghodhbas/Desktop/Excel Fall 2018/sphere.cpp
+	"sphere.h"
+
+1537468984 source:/home/ghodhbas/Desktop/Excel Fall 2018/spherecontainer.cpp
+	"spherecontainer.h"
+
