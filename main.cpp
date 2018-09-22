@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <GL/glut.h>
-#include "functions.h"
+#include "environment.h"
 
 #define WIDTH 1000
 #define HEIGHT 800

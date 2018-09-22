@@ -61,11 +61,11 @@
 1537468984 source:/home/ghodhbas/Desktop/Excel Fall 2018/spherecontainer.cpp
 	"spherecontainer.h"
 
-1537409796 source:/home/ghodhbas/Desktop/Excel-Fall-2018/main.cpp
+1537639210 source:/home/ghodhbas/Desktop/Excel-Fall-2018/main.cpp
 	<stdlib.h>
 	<math.h>
 	<GL/glut.h>
-	"functions.h"
+	"environment.h"
 
 1537472340 /home/ghodhbas/Desktop/Excel-Fall-2018/functions.h
 	<iostream>
@@ -86,4 +86,14 @@
 
 1537638729 source:/home/ghodhbas/Desktop/Excel-Fall-2018/sphere.cpp
 	"sphere.h"
+
+1537639312 /home/ghodhbas/Desktop/Excel-Fall-2018/environment.h
+	<iostream>
+	<math.h>
+	<stdlib.h>
+	"sphere.h"
+	"spherecontainer.h"
+	"camera.h"
+
+1537639311 /home/ghodhbas/Desktop/Excel-Fall-2018/camera.h
 
