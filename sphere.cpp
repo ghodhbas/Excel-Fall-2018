@@ -2,9 +2,7 @@
 
 Sphere::Sphere(float x, float y, float z, float radius)
 {
-    this->x = x;
-    this->y = y;
-    this->z = z;
+    this->position = glm::vec3(x,y,z);
     this->radius = radius;
 }
 
