@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include "sphere.h"
 #include "spherecontainer.h"
+
+//full header files with functionality
 #include "camera.h"
 
 //spheres container

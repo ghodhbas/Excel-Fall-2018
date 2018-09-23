@@ -40,7 +40,8 @@
 			<Add library="GL" />
 			<Add library="X11" />
 		</Linker>
-		<Unit filename="functions.h" />
+		<Unit filename="camera.h" />
+		<Unit filename="environment.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="sphere.cpp" />
 		<Unit filename="sphere.h" />
