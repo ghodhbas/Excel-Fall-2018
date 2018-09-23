@@ -3,15 +3,16 @@
 #include <stdlib.h>
 #include "sphere.h"
 #include "spherecontainer.h"
+#include "physics.h"
 
 //full header files with functionality
 #include "camera.h"
 
+
 //spheres container
 SphereContainer* arr = new SphereContainer();
-
-float frame = 0.f;
-
+//Physics handler
+Physics physics(9.8f);
 
 float RandomFloat(float a, float b) {
     float random = ((float) rand()) / (float) RAND_MAX;
@@ -20,20 +21,20 @@ float RandomFloat(float a, float b) {
     return a + r;
 }
 
-void drawSphere(Sphere* sphere, int frame) {
+void drawSphere(Sphere* sphere) {
 
-	glColor4f(0.7f,0.3f,0.1f,0.1f);
+	glColor4f(0.4f,0.3f,0.1f,0.1f);
 
     //check if the sphere reached the ground
-    if(sphere->GetY() != sphere->GetRadius()){
-
-        if(sphere->GetY()- sphere->GetRadius() >= 0)
-        {
-            sphere->SetY(sphere->GetY()-0.1f);
+    if(sphere->GetY() != sphere->GetRadius())
+    {
+        if(sphere->GetY() > sphere->GetRadius()){
+            physics.ApplyGravity(sphere);
         }else{
             sphere->SetY(sphere->GetRadius());
         }
     }
+
 
 	glTranslatef(sphere->GetX() ,sphere->GetY(),sphere->GetZ());
 	glutSolidSphere(sphere->GetRadius(),20,20);
@@ -41,7 +42,7 @@ void drawSphere(Sphere* sphere, int frame) {
 }
 
 void renderScene(void) {
-
+    //camera movement
 	if (deltaMove || deltaMoveV)
 		computePos(deltaMove, deltaMoveV);
 
@@ -58,7 +59,6 @@ void renderScene(void) {
 
 // Draw ground
 
-	 //grid
     glColor3f(0.f,0.f,0.f);
     GLfloat fExtent = 50.0f;
 	GLfloat fStep = 1.0f;
@@ -75,10 +75,10 @@ void renderScene(void) {
     glEnd();
 
 
-
+    //create ball
     if( rand() % 100 <= 10)
     {
-        arr->addSphere(Sphere(RandomFloat(-25.f,25.f),50.000f,RandomFloat(-25.f,25.f), 1.00f));
+        arr->addSphere(Sphere(RandomFloat(-25.f,25.f),50.f,RandomFloat(-25.f,25.f), 10.f, 1.f));
     }
 
 
@@ -86,7 +86,7 @@ void renderScene(void) {
     for(int i=0; i<arr->GetSize(); i++)
     {
         glPushMatrix();
-        drawSphere(arr->GetSphere(i), frame);
+        drawSphere(arr->GetSphere(i));
         glPopMatrix();
     }
 

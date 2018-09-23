@@ -43,6 +43,8 @@
 		<Unit filename="camera.h" />
 		<Unit filename="environment.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="physics.cpp" />
+		<Unit filename="physics.h" />
 		<Unit filename="sphere.cpp" />
 		<Unit filename="sphere.h" />
 		<Unit filename="spherecontainer.cpp" />

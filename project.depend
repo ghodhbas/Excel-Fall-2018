@@ -61,7 +61,7 @@
 1537468984 source:/home/ghodhbas/Desktop/Excel Fall 2018/spherecontainer.cpp
 	"spherecontainer.h"
 
-1537639210 source:/home/ghodhbas/Desktop/Excel-Fall-2018/main.cpp
+1537639837 source:/home/ghodhbas/Desktop/Excel-Fall-2018/main.cpp
 	<stdlib.h>
 	<math.h>
 	<GL/glut.h>
@@ -74,7 +74,7 @@
 	"sphere.h"
 	"spherecontainer.h"
 
-1537638809 /home/ghodhbas/Desktop/Excel-Fall-2018/sphere.h
+1537719618 /home/ghodhbas/Desktop/Excel-Fall-2018/sphere.h
 	<glm/glm.hpp>
 
 1537470137 /home/ghodhbas/Desktop/Excel-Fall-2018/spherecontainer.h
@@ -84,16 +84,24 @@
 1537468984 source:/home/ghodhbas/Desktop/Excel-Fall-2018/spherecontainer.cpp
 	"spherecontainer.h"
 
-1537638729 source:/home/ghodhbas/Desktop/Excel-Fall-2018/sphere.cpp
+1537715925 source:/home/ghodhbas/Desktop/Excel-Fall-2018/sphere.cpp
 	"sphere.h"
 
-1537639312 /home/ghodhbas/Desktop/Excel-Fall-2018/environment.h
+1537719846 /home/ghodhbas/Desktop/Excel-Fall-2018/environment.h
 	<iostream>
 	<math.h>
 	<stdlib.h>
 	"sphere.h"
 	"spherecontainer.h"
+	"physics.h"
 	"camera.h"
 
 1537639311 /home/ghodhbas/Desktop/Excel-Fall-2018/camera.h
+
+1537718318 /home/ghodhbas/Desktop/Excel-Fall-2018/physics.h
+	<glm/glm.hpp>
+	"sphere.h"
+
+1537719893 source:/home/ghodhbas/Desktop/Excel-Fall-2018/physics.cpp
+	"physics.h"
 
