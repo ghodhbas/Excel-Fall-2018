@@ -1,6 +1,8 @@
 #ifndef PHYSICS_H
 #define PHYSICS_H
 #include <glm/glm.hpp>
+#include <vector>
+#include "plane.h"
 #include "sphere.h"
 
 class Physics
@@ -9,8 +11,8 @@ class Physics
         Physics(float gravity);
         virtual ~Physics();
 
-
-        void ApplyGravity(Sphere* sphere);
+        void ApplyGravity(Sphere& sphere);
+        void DetectCollisions(std::vector<Sphere>& SphereContainer, Plane& ground);
 
         glm::vec3 GetAccelarion(){return acceleration;}
 

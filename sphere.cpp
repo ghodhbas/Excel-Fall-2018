@@ -1,13 +1,25 @@
 #include "sphere.h"
 
-Sphere::Sphere(float x, float y, float z, float mass, float radius)
+Sphere::Sphere(glm::vec3 position, float mass, float radius)
 {
-    this->position = glm::vec3(x,y,z);
+    this->position = position;
     this->mass = mass;
     this->radius = radius;
 }
 
 Sphere::~Sphere()
 {
-    //dtor
 }
+
+bool Sphere::DetectCollision(Plane& plane)
+{
+    float distanceCenterFromPlane = fabs(glm::dot(plane.GetNormal(), position) + plane.GetD());
+    float distanceFromPlane = distanceCenterFromPlane - radius;
+
+    if(distanceFromPlane<0)
+    {
+        return true;
+    }
+    return false;
+}
+

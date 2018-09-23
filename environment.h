@@ -1,18 +1,27 @@
 #include <iostream>
 #include <math.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include "sphere.h"
-#include "spherecontainer.h"
 #include "physics.h"
+#include "plane.h"
+#include <vector>
 
 //full header files with functionality
 #include "camera.h"
 
+int frame=0,timebase,currenttime;
 
 //spheres container
-SphereContainer* arr = new SphereContainer();
+std::vector<Sphere> SphereContainer;
+
 //Physics handler
-Physics physics(9.8f);
+Physics physics(9.81f);
+
+//plane
+glm::vec3 N(0.f,1.f,0.f);
+Plane ground(N,0.f);
+
 
 float RandomFloat(float a, float b) {
     float random = ((float) rand()) / (float) RAND_MAX;
@@ -21,24 +30,29 @@ float RandomFloat(float a, float b) {
     return a + r;
 }
 
-void drawSphere(Sphere* sphere) {
+void drawSphere(Sphere& sphere) {
 
 	glColor4f(0.4f,0.3f,0.1f,0.1f);
 
     //check if the sphere reached the ground
-    if(sphere->GetY() != sphere->GetRadius())
+    if( sphere.GetVelocity() != ((glm::vec3)(0.f,0.f,0.f)))
+    physics.ApplyGravity(sphere);
+
+
+
+    if(sphere.DetectCollision(ground))
     {
-        if(sphere->GetY() > sphere->GetRadius()){
-            physics.ApplyGravity(sphere);
-        }else{
-            sphere->SetY(sphere->GetRadius());
-        }
+          sphere.SetY(sphere.GetRadius());
+          sphere.SetVelocity((glm::vec3)(0.f,0.f,0.f));
+//        glm::vec3 Vrel = sphere.GetVelocity();
+//        float vDotN = glm::dot(Vrel,ground.GetNormal());
+//        glm::vec3 F = -ground.GetNormal() * (1.0f + 0.5f)*vDotN;
+//        F *= sphere.GetMass();
+//        sphere.SetVelocity( (F / sphere.GetMass()) * sphere.GetTime());
     }
 
-
-	glTranslatef(sphere->GetX() ,sphere->GetY(),sphere->GetZ());
-	glutSolidSphere(sphere->GetRadius(),20,20);
-
+	glTranslatef(sphere.GetX() ,sphere.GetY(),sphere.GetZ());
+	glutSolidSphere(sphere.GetRadius(),10,10);
 }
 
 void renderScene(void) {
@@ -58,7 +72,6 @@ void renderScene(void) {
 			0.0f, 1.0f,  0.0f);
 
 // Draw ground
-
     glColor3f(0.f,0.f,0.f);
     GLfloat fExtent = 50.0f;
 	GLfloat fStep = 1.0f;
@@ -74,26 +87,38 @@ void renderScene(void) {
     }
     glEnd();
 
-
     //create ball
-    if( rand() % 100 <= 10)
+    if( rand() % 100 <= 1)
     {
-        arr->addSphere(Sphere(RandomFloat(-25.f,25.f),50.f,RandomFloat(-25.f,25.f), 10.f, 1.f));
+        //randomize position
+        glm::vec3 pos(RandomFloat(-30.f,30.f),50.f,RandomFloat(-30.f,30.f));
+        //create sphere
+        SphereContainer.push_back(Sphere(pos,10.f,1.f));
     }
 
-
     //draw sphere
-    for(int i=0; i<arr->GetSize(); i++)
+    for(unsigned int i=0; i<SphereContainer.size(); i++)
     {
         glPushMatrix();
-        drawSphere(arr->GetSphere(i));
+        drawSphere(SphereContainer[i]);
         glPopMatrix();
     }
 
-    if(arr->GetSize()>0)
-    {
-    std::cout << arr->GetSize() << std::endl;
-    }
+
+
+
+    //calculate the frames per second
+	frame++;
+	//get the current time
+	currenttime = glutGet(GLUT_ELAPSED_TIME);
+	//check if a second has passed
+	if (currenttime - timebase > 1000)
+	{
+		std::cout <<"FPS: "<< (int) (frame*1000.0/(currenttime-timebase)) << std::endl;
+	 	timebase = currenttime;
+		frame = 0;
+	}
+
 
     glutSwapBuffers();
 }

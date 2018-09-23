@@ -16,10 +16,12 @@ int main(int argc, char **argv) {
 	glutInitWindowSize(WIDTH, HEIGHT);
 	glutCreateWindow("APPLICATION");
 
-	// register callbacks
+
 	glutDisplayFunc(renderScene);
 	glutReshapeFunc(changeSize);
 	glutIdleFunc(renderScene);
+
+
 
 	glutIgnoreKeyRepeat(0);
 	glutKeyboardFunc(processNormalKeys);

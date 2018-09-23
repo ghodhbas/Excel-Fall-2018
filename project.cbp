@@ -45,10 +45,10 @@
 		<Unit filename="main.cpp" />
 		<Unit filename="physics.cpp" />
 		<Unit filename="physics.h" />
+		<Unit filename="plane.cpp" />
+		<Unit filename="plane.h" />
 		<Unit filename="sphere.cpp" />
 		<Unit filename="sphere.h" />
-		<Unit filename="spherecontainer.cpp" />
-		<Unit filename="spherecontainer.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />
