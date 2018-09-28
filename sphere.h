@@ -3,6 +3,8 @@
 #include <glm/glm.hpp>
 #include <math.h>
 #include "plane.h"
+#include "asa109.cpp"
+#include <random>
 
 class Sphere
 {
@@ -30,6 +32,16 @@ class Sphere
         void SetVelocity(glm::vec3 v){this->velocity = v;}
         void SetTime(float time){this->deltaT = time;}
         void SetRadius(float radius){this->radius=radius;}
+    	float RandomRadius(float alpha, float beta, float dMin, float dMax){
+			float b = log10(dMin);	//Linear rescaling factors for desired dMin, dMax range
+			float a = log10(dMax) - b;
+			//Fill in code for generating k
+			//float k = uniform random on (0,1)
+			float betaScore = (a + b - 1 - (log10(1/k))/3)/a;	//Corresponding score of beta dist
+			int ifault;	//For xinbeta() error flag, currently being ignored
+			float betaValue = xinbeta(beta, alpha, log(betaScore), betaScore, &ifault);	//Inverting beta dist
+			return pow(10,betaValue);	//Undo log scale
+		}
 
 
     protected:
