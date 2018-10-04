@@ -3,6 +3,8 @@
 #include <glm/glm.hpp>
 #include <math.h>
 #include "plane.h"
+#include "asa109.cpp"
+#include <random>
 
 class Sphere
 {
@@ -42,12 +44,28 @@ class Sphere
         void SetVelocityY(float vY){this->velocity.y = vY;}
         void SetTime(float time){this->time = time;}
         void SetRadius(float radius){this->radius=radius;}
+<<<<<<< HEAD
         //physics setters
         void SetH0(float v){this->h0=v;}
         void SetHmax(float v){this->hmax=v;}
         void SetState(bool v){this->freefall = v;}
         void SetTLast(float v){this->tLast = v;}
         void SetVMax(float v){this->vmax =v;}
+=======
+    	float RandomRadius(float alpha, float beta, float dMin, float dMax){
+			float b = log10(dMin);	//Linear rescaling factors for desired dMin, dMax range
+			float a = log10(dMax) - b;
+			//Fill in code for generating k
+			//float k = uniform random on (0,1)
+			float betaScore = (a + b - 1 - (log10(1/k))/3)/a;	//Corresponding score of beta dist
+			int ifault;	//For xinbeta() error flag, currently being ignored
+			float betaValue = xinbeta(beta, alpha, log(betaScore), betaScore, &ifault);	//Inverting beta dist
+			return pow(10,betaValue);	//Undo log scale
+		}
+
+
+    protected:
+>>>>>>> 3308996de50078a975aeaf9e545557d75c64e354
 
     private:
     float time = 0.f;
