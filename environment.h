@@ -32,27 +32,13 @@ float RandomFloat(float a, float b) {
 
 void drawSphere(Sphere& sphere) {
 
-	glColor4f(0.4f,0.3f,0.1f,0.1f);
-
-    //check if the sphere reached the ground
-    if( sphere.GetVelocity() != ((glm::vec3)(0.f,0.f,0.f)))
+	glColor4f(0.6f,0.3f,0.1f,0.1f);
+    //handle sphere gravity and plane collition
     physics.ApplyGravity(sphere);
-
-
-
-    if(sphere.DetectCollision(ground))
-    {
-          sphere.SetY(sphere.GetRadius());
-          sphere.SetVelocity((glm::vec3)(0.f,0.f,0.f));
-//        glm::vec3 Vrel = sphere.GetVelocity();
-//        float vDotN = glm::dot(Vrel,ground.GetNormal());
-//        glm::vec3 F = -ground.GetNormal() * (1.0f + 0.5f)*vDotN;
-//        F *= sphere.GetMass();
-//        sphere.SetVelocity( (F / sphere.GetMass()) * sphere.GetTime());
-    }
-
+    //draw in correct postions
 	glTranslatef(sphere.GetX() ,sphere.GetY(),sphere.GetZ());
-	glutSolidSphere(sphere.GetRadius(),10,10);
+	glutSolidSphere(sphere.GetRadius(),20,20);
+
 }
 
 void renderScene(void) {
@@ -88,7 +74,7 @@ void renderScene(void) {
     glEnd();
 
     //create ball
-    if( rand() % 100 <= 1)
+    if( rand() % 50 <= 1)
     {
         //randomize position
         glm::vec3 pos(RandomFloat(-30.f,30.f),50.f,RandomFloat(-30.f,30.f));
@@ -118,7 +104,6 @@ void renderScene(void) {
 	 	timebase = currenttime;
 		frame = 0;
 	}
-
 
     glutSwapBuffers();
 }

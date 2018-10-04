@@ -4,8 +4,8 @@
 //full header file with functionality
 #include "environment.h"
 
-#define WIDTH 1000
-#define HEIGHT 800
+#define WIDTH 1400
+#define HEIGHT 1000
 
 int main(int argc, char **argv) {
 
@@ -16,13 +16,12 @@ int main(int argc, char **argv) {
 	glutInitWindowSize(WIDTH, HEIGHT);
 	glutCreateWindow("APPLICATION");
 
-
+    //display
 	glutDisplayFunc(renderScene);
 	glutReshapeFunc(changeSize);
 	glutIdleFunc(renderScene);
 
-
-
+    //inputs
 	glutIgnoreKeyRepeat(0);
 	glutKeyboardFunc(processNormalKeys);
 	glutSpecialFunc(pressKey);
