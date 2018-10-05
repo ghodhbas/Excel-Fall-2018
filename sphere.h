@@ -3,7 +3,7 @@
 #include <glm/glm.hpp>
 #include <math.h>
 #include "plane.h"
-//#include "asa109.cpp"
+# include "asa109.hpp"
 #include <random>
 
 class Sphere
@@ -21,6 +21,8 @@ class Sphere
         float GetZ(){return position.z;}
         glm::vec3 GetPosition(){return position;}
         glm::vec3 GetVelocity(){return velocity;}
+        float GetVelocityX(){return velocity.x;}
+        float GetVelocityZ(){return velocity.z;}
         float GetVelocityY(){return velocity.y;}
         float GetTime(){return time;}
         float GetRadius(){return radius;}
@@ -52,16 +54,16 @@ class Sphere
         void SetTLast(float v){this->tLast = v;}
         void SetVMax(float v){this->vmax =v;}
 
-//    	float RandomRadius(float alpha, float beta, float dMin, float dMax){
-//			float b = log10(dMin);	//Linear rescaling factors for desired dMin, dMax range
-//			float a = log10(dMax) - b;
-//			//Fill in code for generating k
-//			float k = (float) rand()/RAND_MAX;
-//			float betaScore = (a + b - 1 - (log10(1/k))/3)/a;	//Corresponding score of beta dist
-//			int ifault;	//For xinbeta() error flag, currently being ignored
-//			float betaValue = 0.5f; // xinbeta(beta, alpha, log(betaScore), betaScore, &ifault);	//Inverting beta dist
-//			return pow(10,betaValue);	//Undo log scale
-//		}
+    	float RandomRadius(float alpha, float beta, float dMin, float dMax){
+			float b = log10(dMin);	//Linear rescaling factors for desired dMin, dMax range
+			float a = log10(dMax) - b;
+			//Fill in code for generating k
+			float k = (float) rand()/RAND_MAX;
+			float betaScore = (a + b - 1 - (log10(1/k))/3)/a;	//Corresponding score of beta dist
+			int ifault;	//For xinbeta() error flag, currently being ignored
+			float betaValue = xinbta(beta, alpha, log(betaScore), betaScore, ifault);	//Inverting beta dist
+			return pow(10,betaValue);	//Undo log scale
+		}
 
 
     protected:
@@ -69,14 +71,14 @@ class Sphere
     private:
     float time = 0.f;
     glm::vec3 position;
-    glm::vec3 velocity = glm::vec3(0.f,-0.002f,0.f);
+    glm::vec3 velocity = glm::vec3(0.f,0.f,0.f);
     float mass;
     float radius;
 
     //bounce physics
     float h0;
     float hmax; //max height
-    float rho = 0.5f; //restituion coeff
+    float rho = 0.2f; //restituion coeff
     float tau = 0.01f; //contact time for bounce
     float hstop = 0.01f; //stop when bounce is less than 1 cm
     bool freefall = true;  // state: freefall or in contact

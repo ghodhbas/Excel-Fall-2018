@@ -182,8 +182,8 @@ void beta_inc_values ( int &n_data, double &a, double &b, double &x,
       0.2E+01,
       0.2E+01,
       0.2E+01,
-     11.7562, 
-     11.7562, 
+     11.7562,
+     11.7562,
      11.7562 };
 
   static double fx_vec[N_MAX] = {
@@ -318,7 +318,7 @@ double betain ( double x, double p, double q, double beta, int &ifault )
 //
 //  Licensing:
 //
-//    This code is distributed under the GNU LGPL license. 
+//    This code is distributed under the GNU LGPL license.
 //
 //  Modified:
 //
@@ -443,7 +443,7 @@ double betain ( double x, double p, double q, double beta, int &ifault )
 
     if ( temp <= acu && temp <= acu * value )
     {
-      value = value * exp ( pp * log ( xx ) 
+      value = value * exp ( pp * log ( xx )
       + ( qq - 1.0 ) * log ( cx ) - beta ) / pp;
 
       if ( indx )
@@ -485,7 +485,7 @@ double r8_max ( double x, double y )
 //
 //  Licensing:
 //
-//    This code is distributed under the GNU LGPL license. 
+//    This code is distributed under the GNU LGPL license.
 //
 //  Modified:
 //
@@ -507,7 +507,7 @@ double r8_max ( double x, double y )
   if ( y < x )
   {
     value = x;
-  } 
+  }
   else
   {
     value = y;
@@ -530,7 +530,7 @@ void timestamp ( )
 //
 //  Licensing:
 //
-//    This code is distributed under the GNU LGPL license. 
+//    This code is distributed under the GNU LGPL license.
 //
 //  Modified:
 //
@@ -580,7 +580,7 @@ double xinbta ( double p, double q, double beta, double alpha, int &ifault )
 //
 //  Licensing:
 //
-//    This code is distributed under the GNU LGPL license. 
+//    This code is distributed under the GNU LGPL license.
 //
 //  Modified:
 //
@@ -715,7 +715,7 @@ double xinbta ( double p, double q, double beta, double alpha, int &ifault )
 //
   r = sqrt ( - log ( a * a ) );
 
-  y = r - ( 2.30753 + 0.27061 * r ) 
+  y = r - ( 2.30753 + 0.27061 * r )
     / ( 1.0 + ( 0.99229 + 0.04481 * r ) * r );
 
   if ( 1.0 < pp && 1.0 < qq )
@@ -724,7 +724,7 @@ double xinbta ( double p, double q, double beta, double alpha, int &ifault )
     s = 1.0 / ( pp + pp - 1.0 );
     t = 1.0 / ( qq + qq - 1.0 );
     h = 2.0 / ( s + t );
-    w = y * sqrt ( h + r ) / h - ( t - s ) 
+    w = y * sqrt ( h + r ) / h - ( t - s )
       * ( r + 5.0 / 6.0 - 2.0 / ( 3.0 * h ) );
     value = pp / ( pp + qq * exp ( w + w ) );
   }

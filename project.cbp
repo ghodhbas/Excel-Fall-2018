@@ -40,6 +40,8 @@
 			<Add library="GL" />
 			<Add library="X11" />
 		</Linker>
+		<Unit filename="asa109.cpp" />
+		<Unit filename="asa109.hpp" />
 		<Unit filename="camera.h" />
 		<Unit filename="environment.h" />
 		<Unit filename="main.cpp" />

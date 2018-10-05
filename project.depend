@@ -61,7 +61,7 @@
 1537468984 source:/home/ghodhbas/Desktop/Excel Fall 2018/spherecontainer.cpp
 	"spherecontainer.h"
 
-1538160098 source:/home/ghodhbas/Desktop/Excel-Fall-2018/main.cpp
+1538707447 source:/home/ghodhbas/Desktop/Excel-Fall-2018/main.cpp
 	<stdlib.h>
 	<math.h>
 	<GL/glut.h>
@@ -74,10 +74,11 @@
 	"sphere.h"
 	"spherecontainer.h"
 
-1538622215 /home/ghodhbas/Desktop/Excel-Fall-2018/sphere.h
+1538704044 /home/ghodhbas/Desktop/Excel-Fall-2018/sphere.h
 	<glm/glm.hpp>
 	<math.h>
 	"plane.h"
+	"asa109.hpp"
 	<random>
 
 1537470137 /home/ghodhbas/Desktop/Excel-Fall-2018/spherecontainer.h
@@ -87,10 +88,10 @@
 1537468984 source:/home/ghodhbas/Desktop/Excel-Fall-2018/spherecontainer.cpp
 	"spherecontainer.h"
 
-1538017226 source:/home/ghodhbas/Desktop/Excel-Fall-2018/sphere.cpp
+1538699907 source:/home/ghodhbas/Desktop/Excel-Fall-2018/sphere.cpp
 	"sphere.h"
 
-1538159883 /home/ghodhbas/Desktop/Excel-Fall-2018/environment.h
+1538707492 /home/ghodhbas/Desktop/Excel-Fall-2018/environment.h
 	<iostream>
 	<math.h>
 	<stdio.h>
@@ -98,19 +99,20 @@
 	"sphere.h"
 	"physics.h"
 	"plane.h"
+	<math.h>
 	<vector>
 	"camera.h"
 
 1537639311 /home/ghodhbas/Desktop/Excel-Fall-2018/camera.h
 
-1538155483 /home/ghodhbas/Desktop/Excel-Fall-2018/physics.h
+1538703778 /home/ghodhbas/Desktop/Excel-Fall-2018/physics.h
 	<glm/glm.hpp>
 	<vector>
 	<math.h>
 	"plane.h"
 	"sphere.h"
 
-1538155814 source:/home/ghodhbas/Desktop/Excel-Fall-2018/physics.cpp
+1538701571 source:/home/ghodhbas/Desktop/Excel-Fall-2018/physics.cpp
 	"physics.h"
 	<math.h>
 	<iostream>
@@ -122,7 +124,7 @@
 1537736793 /home/ghodhbas/Desktop/Excel-Fall-2018/plane.h
 	<glm/glm.hpp>
 
-1538621208 /home/ghodhbas/Desktop/Excel-Fall-2018/asa109.cpp
+1538687268 /home/ghodhbas/Desktop/Excel-Fall-2018/asa109.cpp
 	<cstdlib>
 	<iostream>
 	<iomanip>
@@ -130,9 +132,9 @@
 	<ctime>
 	"asa109.hpp"
 
-1538621208 /home/ghodhbas/Desktop/Excel-Fall-2018/asa109.hpp
+1538690168 /home/ghodhbas/Desktop/Excel-Fall-2018/asa109.hpp
 
-1538621208 source:/home/ghodhbas/Desktop/Excel-Fall-2018/asa109.cpp
+1538687354 source:/home/ghodhbas/Desktop/Excel-Fall-2018/asa109.cpp
 	<cstdlib>
 	<iostream>
 	<iomanip>
