@@ -19,10 +19,14 @@ std::vector<Sphere> SphereContainer;
 //Physics handler
 Physics physics(9.81f);
 
-//plane
+//rightplane
 glm::vec3 N(-0.5f,0.8f,0.f);
 Plane rightPlane(N,9.5f);
-Plane p1 = rightPlane.Normalized();
+Plane rp = rightPlane.Normalized();
+//leftplane
+glm::vec3 N2(0.5f,0.8f,0.f);
+Plane leftPlane(N2,9.5f);
+Plane lp = leftPlane.Normalized();
 
 
 float RandomFloat(float a, float b) {
@@ -36,18 +40,11 @@ void drawSphere(Sphere& sphere) {
 	glColor4f(0.6f,0.3f,0.1f,1.f);
     //handle sphere gravity and plane collition
     physics.ApplyGravity(sphere);
-    //side collision
-     if(sphere.DetectCollision(p1))
-    {   //collision distance
-        float distanceCenterFromPlane = fabs(glm::dot(p1.GetNormal(), sphere.GetPosition()) + p1.GetD());
-        float distanceFromPlane = fabs(distanceCenterFromPlane - sphere.GetRadius());
-        //update position speed and energy lost
-        sphere.SetPosition(sphere.GetPosition()+ p1.GetNormal() * distanceFromPlane);
-        sphere.SetTime(sphere.GetTime()+sphere.GetTau());
-        sphere.SetVMax(sphere.GetVMax() * sphere.GetRho());
-        sphere.SetVelocity(glm::reflect(sphere.GetVelocity(),p1.GetNormal()) *sphere.GetRho());
-    }
-
+   //side collision
+     if(sphere.DetectCollision(rp))
+        sphere.CollisionResponse(rp);
+    if(sphere.DetectCollision(lp))
+        sphere.CollisionResponse(lp);
 
     //draw in correct postions
 	glTranslatef(sphere.GetX() ,sphere.GetY(),sphere.GetZ());
@@ -87,12 +84,11 @@ void renderScene(void) {
     }
     glEnd();
 
-
     //create ball
-    if( rand() % 180 <= 1)
+    if( rand() % 100 <= 1)
     {
         //randomize position
-        glm::vec3 pos(RandomFloat(-30.f,30.f),50.f,RandomFloat(-20.f,20.f));
+        glm::vec3 pos(RandomFloat(-35.f,35.f),50.f,RandomFloat(-20.f,20.f));
         //create sphere
         SphereContainer.push_back(Sphere(pos,10.f,1.f));
     }
@@ -106,13 +102,20 @@ void renderScene(void) {
     }
 
     //draw side
-
     glBegin(GL_QUADS);
     glColor4f(0.f,0.7f,0.5f,0.4f);
     glVertex3f(50.f,20.047f,-30.f);
     glVertex3f(17.924f,0.f,-30.f);
     glVertex3f(17.924f,0.f,30.f);
     glVertex3f(50.f,20.047f, 30.f);
+    glEnd();
+    //draw left side
+    glBegin(GL_QUADS);
+    glColor4f(0.f,0.7f,0.5f,0.4f);
+    glVertex3f(-50.f,20.047f,-30.f);
+    glVertex3f(-17.924f,0.f,-30.f);
+    glVertex3f(-17.924f,0.f,30.f);
+    glVertex3f(-50.f,20.047f, 30.f);
     glEnd();
 
 

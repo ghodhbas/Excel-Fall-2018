@@ -14,6 +14,7 @@ class Sphere
         virtual ~Sphere();
 
         bool DetectCollision(Plane& plane);
+        void CollisionResponse(Plane& plane);
 
 
         float GetX(){return position.x;}
@@ -80,7 +81,7 @@ class Sphere
     float hmax; //max height
     float rho = 0.2f; //restituion coeff
     float tau = 0.01f; //contact time for bounce
-    float hstop = 0.01f; //stop when bounce is less than 1 cm
+    float hstop = 0.05f; //stop when bounce is less than 1 cm
     bool freefall = true;  // state: freefall or in contact
     float tLast; //time we would have launched to get to h0 at t=0
     float vmax;
