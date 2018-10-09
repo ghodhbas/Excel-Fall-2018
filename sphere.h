@@ -79,7 +79,7 @@ class Sphere
     //bounce physics
     float h0;
     float hmax; //max height
-    float rho = 0.2f; //restituion coeff
+    float rho = 0.1f; //restituion coeff
     float tau = 0.01f; //contact time for bounce
     float hstop = 0.05f; //stop when bounce is less than 1 cm
     bool freefall = true;  // state: freefall or in contact
