@@ -16,6 +16,9 @@ class Sphere
         bool DetectCollision(Plane& plane);
         void CollisionResponse(Plane& plane);
 
+        bool DetectCollision(Sphere& other);
+        void CollisionResponse(Sphere& other);
+
 
         float GetX(){return position.x;}
         float GetY(){return position.y;}
@@ -37,6 +40,7 @@ class Sphere
         bool GetState(){return freefall;}
         float GetTLast(){return tLast;}
         float GetVMax(){return vmax;}
+        float GetVolume(){return volume;}
 
 
         void SetX(float x){position.x = x;}
@@ -75,11 +79,12 @@ class Sphere
     glm::vec3 velocity = glm::vec3(0.f,0.f,0.f);
     float mass;
     float radius;
+    float volume;
 
     //bounce physics
     float h0;
     float hmax; //max height
-    float rho = 0.1f; //restituion coeff
+    float rho = 0.15f; //restituion coeff
     float tau = 0.01f; //contact time for bounce
     float hstop = 0.05f; //stop when bounce is less than 1 cm
     bool freefall = true;  // state: freefall or in contact

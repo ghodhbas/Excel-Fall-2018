@@ -46,9 +46,24 @@ float RandomFloat(float a, float b) {
 
 void drawSphere(Sphere& sphere) {
 	glColor4f(0.6f,0.3f,0.1f,1.f);
+    //draw in correct postions
+	glTranslatef(sphere.GetX() ,sphere.GetY(),sphere.GetZ());
+	glutSolidSphere(sphere.GetRadius(),20,20);
+
+}
+
+void animateSphere(Sphere& sphere, int i)
+{
     //handle sphere gravity and plane collition
     physics.ApplyGravity(sphere);
-   //side collision
+
+    for(int j=i+1;j<SphereContainer.size(); j++)
+    {
+        if(sphere.DetectCollision(SphereContainer[j])){
+            sphere.CollisionResponse(SphereContainer[j]);
+        }
+    }
+   //side collisions
     if(sphere.DetectCollision(rp))
         sphere.CollisionResponse(rp);
     if(sphere.DetectCollision(lp))
@@ -58,10 +73,9 @@ void drawSphere(Sphere& sphere) {
     if(sphere.DetectCollision(fp))
         sphere.CollisionResponse(fp);
 
+//    if(sphere.GetY()< sphere.GetRadius())
+//        sphere.SetY(sphere.GetRadius());
 
-    //draw in correct postions
-	glTranslatef(sphere.GetX() ,sphere.GetY(),sphere.GetZ());
-	glutSolidSphere(sphere.GetRadius(),20,20);
 
 }
 
@@ -78,7 +92,7 @@ void renderScene(void) {
 	glLoadIdentity();
 	// Set the camera
 	gluLookAt(	x, y, z,
-			0, 0,  0,
+			0,0,0,
 			0.0f, 1.0f,  0.0f);
 
 // Draw ground
@@ -98,12 +112,14 @@ void renderScene(void) {
     glEnd();
 
     //create ball
-    if( rand() % 50 <= 1)
+    if( rand() % 20 <= 1)
     {
         //randomize position
-        glm::vec3 pos(RandomFloat(-40.f,40.f),50.f,RandomFloat(-50.f,50.f));
+        glm::vec3 pos(RandomFloat(-17.924f,17.924f),50.f,RandomFloat(-36.f,36.f));
         //create sphere
-        SphereContainer.push_back(Sphere(pos,10.f,1.75f));
+        float mass = RandomFloat(1.f,3.f);
+        float r = mass;
+        SphereContainer.push_back(Sphere(pos,mass,r));
     }
 
     //draw sphere
@@ -111,6 +127,7 @@ void renderScene(void) {
     {
         glPushMatrix();
         drawSphere(SphereContainer[i]);
+        animateSphere(SphereContainer[i],i);
         glPopMatrix();
     }
 
