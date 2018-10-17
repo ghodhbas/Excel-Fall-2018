@@ -7,11 +7,13 @@
 #include "plane.h"
 #include <math.h>
 #include <vector>
+#include <thread>
 
 //full header files with functionality
 #include "camera.h"
 
 int frame=0,timebase,currenttime;
+int count=0;
 
 //spheres container
 std::vector<Sphere> SphereContainer;
@@ -48,7 +50,7 @@ void drawSphere(Sphere& sphere) {
 	glColor4f(0.6f,0.3f,0.1f,1.f);
     //draw in correct postions
 	glTranslatef(sphere.GetX() ,sphere.GetY(),sphere.GetZ());
-	glutSolidSphere(sphere.GetRadius(),20,20);
+	glutSolidSphere(sphere.GetRadius(),4,4);
 
 }
 
@@ -78,6 +80,29 @@ void animateSphere(Sphere& sphere, int i)
 
 
 }
+
+void animate()
+{
+    for(unsigned int i=0; i<SphereContainer.size(); i++)
+    {
+        animateSphere(SphereContainer[i],i);
+    }
+
+}
+
+void render()
+{
+    std::thread t1(animate);
+     //draw sphere
+    for(unsigned int i=0; i<SphereContainer.size(); i++)
+    {
+        glPushMatrix();
+        drawSphere(SphereContainer[i]);
+        glPopMatrix();
+    }
+    t1.join();
+}
+
 
 void renderScene(void) {
     //camera movement
@@ -112,24 +137,20 @@ void renderScene(void) {
     glEnd();
 
     //create ball
-    if( rand() % 20 <= 1)
+    if( rand() % 10 <= 1)
     {
         //randomize position
         glm::vec3 pos(RandomFloat(-17.924f,17.924f),50.f,RandomFloat(-36.f,36.f));
         //create sphere
-        float mass = RandomFloat(1.f,3.f);
-        float r = mass;
+        float mass = RandomFloat(0.1f,7.5f);
+        //mass vol 2.4 gram per cubic cm
+        float r = mass/2.4f;
         SphereContainer.push_back(Sphere(pos,mass,r));
+        count++;
     }
 
-    //draw sphere
-    for(unsigned int i=0; i<SphereContainer.size(); i++)
-    {
-        glPushMatrix();
-        drawSphere(SphereContainer[i]);
-        animateSphere(SphereContainer[i],i);
-        glPopMatrix();
-    }
+
+    render();
 
     //draw side
     glBegin(GL_QUADS);
@@ -164,7 +185,6 @@ void renderScene(void) {
     glVertex3f(-17.924f,0.f,-36.f);
     glEnd();
 
-
     //calculate the frames per second
 	frame++;
 	//get the current time
@@ -176,6 +196,9 @@ void renderScene(void) {
 	 	timebase = currenttime;
 		frame = 0;
 	}
+
+	if(count%50==0)
+        std::cout<<"Count: "<<count<<std::endl;
 
     glutSwapBuffers();
 }

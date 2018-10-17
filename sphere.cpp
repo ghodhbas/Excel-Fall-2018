@@ -69,8 +69,8 @@ void Sphere::CollisionResponse(Sphere& other)
     glm::vec3 otherdirection = glm::normalize(this->GetPosition() - other.GetPosition());
     //new velocities
 
-    SetVelocity(glm::reflect(GetVelocity(), otherdirection) * (1/GetMass()) / 2.f);
-    other.SetVelocity(glm::reflect(other.GetVelocity(),direction) * (1/other.GetMass()) / 2.f);
+    SetVelocity(glm::reflect(GetVelocity(), otherdirection) * (1/GetRadius()));
+    other.SetVelocity(glm::reflect(other.GetVelocity(),direction) * (1/GetRadius()));
 
     //position adjustment
     if(this->GetY() == this->GetRadius()){
