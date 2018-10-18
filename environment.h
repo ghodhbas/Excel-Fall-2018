@@ -50,22 +50,19 @@ void drawSphere(Sphere& sphere) {
 	glColor4f(0.6f,0.3f,0.1f,1.f);
     //draw in correct postions
 	glTranslatef(sphere.GetX() ,sphere.GetY(),sphere.GetZ());
-	glutSolidSphere(sphere.GetRadius(),4,4);
+	glutSolidSphere(sphere.GetRadius(),8,8);
 
 }
 
 void animateSphere(Sphere& sphere, int i)
 {
-    //handle sphere gravity and plane collition
-    physics.ApplyGravity(sphere);
-
-    for(int j=i+1;j<SphereContainer.size(); j++)
+      for(int j=i+1;j<SphereContainer.size(); j++)
     {
         if(sphere.DetectCollision(SphereContainer[j])){
             sphere.CollisionResponse(SphereContainer[j]);
         }
     }
-   //side collisions
+    //side collisions
     if(sphere.DetectCollision(rp))
         sphere.CollisionResponse(rp);
     if(sphere.DetectCollision(lp))
@@ -75,8 +72,8 @@ void animateSphere(Sphere& sphere, int i)
     if(sphere.DetectCollision(fp))
         sphere.CollisionResponse(fp);
 
-//    if(sphere.GetY()< sphere.GetRadius())
-//        sphere.SetY(sphere.GetRadius());
+    //handle sphere gravity and plane collition
+    physics.ApplyGravity(sphere);
 
 
 }
@@ -101,6 +98,22 @@ void render()
         glPopMatrix();
     }
     t1.join();
+}
+
+void createSphere()
+{
+if( rand() % 10 <= 1)
+    {
+        //randomize position
+        glm::vec3 pos(RandomFloat(-17.924f,17.924f),100.f,RandomFloat(-36.f,36.f));
+        //create sphere
+        float mass = RandomFloat(0.2f,0.8f);
+        //mass vol 2.4 gram per cubic cm
+        float r = mass*5.f;
+        SphereContainer.push_back(Sphere(pos,mass,r));
+        count++;
+    }
+
 }
 
 
@@ -137,18 +150,7 @@ void renderScene(void) {
     glEnd();
 
     //create ball
-    if( rand() % 10 <= 1)
-    {
-        //randomize position
-        glm::vec3 pos(RandomFloat(-17.924f,17.924f),50.f,RandomFloat(-36.f,36.f));
-        //create sphere
-        float mass = RandomFloat(0.1f,7.5f);
-        //mass vol 2.4 gram per cubic cm
-        float r = mass/2.4f;
-        SphereContainer.push_back(Sphere(pos,mass,r));
-        count++;
-    }
-
+    std::thread t2(createSphere);
 
     render();
 
@@ -200,5 +202,7 @@ void renderScene(void) {
 	if(count%50==0)
         std::cout<<"Count: "<<count<<std::endl;
 
+
+    t2.join();
     glutSwapBuffers();
 }

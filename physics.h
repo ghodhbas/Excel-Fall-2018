@@ -15,7 +15,6 @@ class Physics
         float dt = 0.05f;
 
         void ApplyGravity(Sphere& sphere);
-        void DetectCollisions(std::vector<Sphere>& SphereContainer, Plane& ground);
 
         float GetGravity(){return gravity;}
         glm::vec3 GetAccelarion(){return acceleration;}
@@ -26,7 +25,7 @@ class Physics
     protected:
 
     private:
-    float gravity = 9.81f;
+    float gravity = 1.f;
     glm::vec3 acceleration = glm::vec3(0.f,-gravity,0.f);
 
 };

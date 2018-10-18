@@ -37,8 +37,10 @@
 			<Add option="-Wall" />
 		</Compiler>
 		<Linker>
+			<Add option="-lpthread" />
 			<Add library="GL" />
 			<Add library="X11" />
+			<Add library="libpthread" />
 		</Linker>
 		<Unit filename="asa109.cpp" />
 		<Unit filename="asa109.hpp" />

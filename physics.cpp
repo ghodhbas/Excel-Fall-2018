@@ -15,6 +15,15 @@ Physics::~Physics()
 
 void Physics::ApplyGravity(Sphere& sphere)
 {
+    //calculate new position
+          float hnew = sphere.GetY() + sphere.GetVelocityY() * dt - 0.5 * gravity * dt *dt;
+          float xnew = sphere.GetX() + sphere.GetVelocityX() * dt;
+          float znew = sphere.GetZ() + sphere.GetVelocityZ() * dt;
+          if(hnew< sphere.GetRadius())
+          {
+            sphere.SetY(sphere.GetRadius());
+          }
+
     //sphere in motion
     if( sphere.GetHMax() > sphere.GetHStop())
     {
@@ -22,9 +31,9 @@ void Physics::ApplyGravity(Sphere& sphere)
         if(sphere.GetState())
         {
         //calculate new position
-          float hnew = sphere.GetY() + sphere.GetVelocityY() * dt - 0.5 * gravity * dt *dt;
-          float xnew = sphere.GetX() + sphere.GetVelocityX() * dt;
-          float znew = sphere.GetZ() + sphere.GetVelocityZ() * dt;
+           hnew = sphere.GetY() + sphere.GetVelocityY() * dt - 0.5 * gravity * dt *dt;
+           xnew = sphere.GetX() + sphere.GetVelocityX() * dt;
+           znew = sphere.GetZ() + sphere.GetVelocityZ() * dt;
           //collision with floor
           if(hnew< sphere.GetRadius())
           {
@@ -45,13 +54,12 @@ void Physics::ApplyGravity(Sphere& sphere)
             sphere.SetY(sphere.GetRadius());
         }
         sphere.SetHmax(0.5f * sphere.GetVMax()*sphere.GetVMax()/gravity);
+
+        return;
     }
 
-}
-
-void Physics::DetectCollisions(std::vector<Sphere>& SphereContainer, Plane& ground)
-{
-    //sphere plane collision
+    glm::vec3 v(0,0,0);
+    sphere.SetVelocity(v);
 
 }
 

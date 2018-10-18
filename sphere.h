@@ -41,6 +41,7 @@ class Sphere
         float GetTLast(){return tLast;}
         float GetVMax(){return vmax;}
         float GetVolume(){return volume;}
+        float GetElasticity(){return pE;}
 
 
         void SetX(float x){position.x = x;}
@@ -49,6 +50,8 @@ class Sphere
         void SetPosition(glm::vec3 pos){this->position = pos;}
         void SetVelocity(glm::vec3 v){this->velocity = v;}
         void SetVelocityY(float vY){this->velocity.y = vY;}
+        void SetVelocityX(float vX){this->velocity.x = vX;}
+        void SetVelocityZ(float vZ){this->velocity.z = vZ;}
         void SetTime(float time){this->time = time;}
         void SetRadius(float radius){this->radius=radius;}
 
@@ -84,12 +87,15 @@ class Sphere
     //bounce physics
     float h0;
     float hmax; //max height
-    float rho = 0.15f; //restituion coeff
+    float rho = 0.25f; //restituion coeff
     float tau = 0.01f; //contact time for bounce
     float hstop = 0.05f; //stop when bounce is less than 1 cm
     bool freefall = true;  // state: freefall or in contact
     float tLast; //time we would have launched to get to h0 at t=0
     float vmax;
+
+    //particle elasticity
+    float pE= 0.6f;
 
 };
 

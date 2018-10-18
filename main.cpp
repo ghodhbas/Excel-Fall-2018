@@ -12,7 +12,7 @@ int main(int argc, char **argv) {
 	// init GLUT and create window
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-	glutInitWindowPosition(100,100);
+	glutInitWindowPosition(250,100);
 	glutInitWindowSize(WIDTH, HEIGHT);
 	glutCreateWindow("APPLICATION");
 
