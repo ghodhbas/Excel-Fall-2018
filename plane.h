@@ -4,18 +4,13 @@
 
 class Plane
 {
-    public:
-        Plane(glm::vec3 N, float D);
-        virtual ~Plane();
-
-        Plane Normalized();
-
-        glm::vec3 GetNormal(){return N;}
-        float GetD(){return D;}
-
-    protected:
-
-    private:
+public:
+    Plane(glm::vec3 N, float D);
+    virtual ~Plane();
+    Plane Normalized();\
+    glm::vec3 GetNormal(){return N;}
+    float GetD(){return D;}
+private:
     glm::vec3 N;
     float D;
 };

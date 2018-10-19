@@ -19,7 +19,7 @@ class Sphere
         bool DetectCollision(Sphere& other);
         void CollisionResponse(Sphere& other);
 
-
+        /*Getters*/
         float GetX(){return position.x;}
         float GetY(){return position.y;}
         float GetZ(){return position.z;}
@@ -43,7 +43,7 @@ class Sphere
         float GetVolume(){return volume;}
         float GetElasticity(){return pE;}
 
-
+        /*Setters*/
         void SetX(float x){position.x = x;}
         void SetY(float y){position.y = y;}
         void SetZ(float z){position.z = z;}
@@ -54,7 +54,6 @@ class Sphere
         void SetVelocityZ(float vZ){this->velocity.z = vZ;}
         void SetTime(float time){this->time = time;}
         void SetRadius(float radius){this->radius=radius;}
-
         //physics setters
         void SetH0(float v){this->h0=v;}
         void SetHmax(float v){this->hmax=v;}
@@ -62,21 +61,7 @@ class Sphere
         void SetTLast(float v){this->tLast = v;}
         void SetVMax(float v){this->vmax =v;}
 
-    	float RandomRadius(float alpha, float beta, float dMin, float dMax){
-			float b = log10(dMin);	//Linear rescaling factors for desired dMin, dMax range
-			float a = log10(dMax) - b;
-			//Fill in code for generating k
-			float k = (float) rand()/RAND_MAX;
-			float betaScore = (a + b - 1 - (log10(1/k))/3)/a;	//Corresponding score of beta dist
-			int ifault;	//For xinbeta() error flag, currently being ignored
-			float betaValue = xinbta(beta, alpha, log(betaScore), betaScore, ifault);	//Inverting beta dist
-			return pow(10,betaValue);	//Undo log scale
-		}
-
-
-    protected:
-
-    private:
+private:
     float time = 0.f;
     glm::vec3 position;
     glm::vec3 velocity = glm::vec3(0.f,0.f,0.f);

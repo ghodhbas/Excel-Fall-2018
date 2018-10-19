@@ -15,10 +15,10 @@ int main(int argc, char **argv) {
 	glutInitWindowPosition(250,100);
 	glutInitWindowSize(WIDTH, HEIGHT);
 	glutCreateWindow("APPLICATION");
-
+	glEnable(GL_DEPTH_TEST);
     //display
     glEnable(GL_BLEND);// you enable blending function
-    // Enable lighting
+    // Light Settings
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
     GLfloat lightpos[] = {.5, 4., 1., 0.};
@@ -27,33 +27,20 @@ int main(int argc, char **argv) {
     glEnable ( GL_COLOR_MATERIAL ) ;
     GLfloat cyan[] = {0.f, .8f, .8f, 1.f};
     glMaterialfv(GL_FRONT, GL_DIFFUSE, cyan);
-
-
-
-
-
-
-
+    //rendering callbacks
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glutDisplayFunc(renderScene);
 	glutReshapeFunc(changeSize);
 	glutIdleFunc(renderScene);
-
-    //inputs
+    //keyboard inputs management
 	glutIgnoreKeyRepeat(0);
 	glutKeyboardFunc(processNormalKeys);
 	glutSpecialFunc(pressKey);
 	glutSpecialUpFunc(releaseKey);
-
-	// here are the two new functions
+	//Mouse inputs management
 	glutMouseFunc(mouseButton);
 	glutMotionFunc(mouseMove);
-
-	// OpenGL init
-	glEnable(GL_DEPTH_TEST);
-
 	// enter GLUT event processing cycle
 	glutMainLoop();
-
 	return 1;
 }

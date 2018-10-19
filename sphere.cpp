@@ -2,6 +2,8 @@
 #include "sphere.h"
 #include <iostream>
 #include <math.h>
+
+/*****************Constructor***********************************/
 Sphere::Sphere(glm::vec3 position, float mass, float radius)
 {
     this->position = position;
@@ -13,11 +15,11 @@ Sphere::Sphere(glm::vec3 position, float mass, float radius)
     this->vmax = sqrt(2 * hmax * 9.81f);
     this->volume = 4/3 * M_PI * radius * radius * radius;
 }
-
 Sphere::~Sphere()
 {
 }
 
+/*****************COLLISION WITH PLANES / CONE***********************************/
 bool Sphere::DetectCollision(Plane& plane)
 {
     float distanceCenterFromPlane = fabs(glm::dot(plane.GetNormal(), GetPosition()) + plane.GetD());
@@ -37,23 +39,14 @@ void Sphere::CollisionResponse(Plane& plane)
     float distanceFromPlane = fabs(distanceCenterFromPlane - GetRadius());
     distanceFromPlane =  roundf(distanceFromPlane * 100) / 100;
 
-
-
-    //SetTime(GetTime()+GetTau());
-    //SetVMax(GetVMax() * GetRho());
     SetVelocity(glm::reflect(GetVelocity(),plane.GetNormal()) * GetRho());
-    //SetState(true);
     SetPosition(GetPosition()+ plane.GetNormal() * distanceFromPlane);
-//    if(GetY()>GetRadius())
-//        SetVelocity(glm::reflect(GetVelocity(),plane.GetNormal()))
-//
-
     if( (distanceFromPlane + glm::length(GetVelocity()) )== 0 )
         SetVMax(GetVMax()/GetRho());
 
 }
 
-
+/*****************COLLISION WITH SPHERES***********************************/
 bool Sphere::DetectCollision(Sphere& other)
 {
     float radiusDistance = this->GetRadius() + other.GetRadius();
@@ -105,29 +98,24 @@ void Sphere::CollisionResponse(Sphere& other)
         float Vnew2y = (other.GetVelocityY() * (other.GetMass()-this->GetMass()) + (2* this->GetMass() * this->GetVelocityY())) / (this->GetMass() + other.GetMass());
         float Vnew2z = (other.GetVelocityZ() * (other.GetMass()-this->GetMass()) + (2* this->GetMass() * this->GetVelocityZ())) / (this->GetMass() + other.GetMass());
         glm::vec3 v2New(Vnew2x,Vnew2y,Vnew2z);
-
-        //this->SetVelocity(glm::normalize(glm::reflect(GetVelocity(), otherdirection))   *  glm::length(v1New) * this->GetElasticity());
-        //other.SetVelocity(glm::normalize(glm::reflect(other.GetVelocity(), direction))   *  glm::length(v2New) * other.GetElasticity()  );
-
         //update speeds
         this->SetVelocityX(Vnew1x * this->GetElasticity());
         this->SetVelocityY(Vnew1y * this->GetElasticity());
         this->SetVelocityZ(Vnew1z * this->GetElasticity());
-
         other.SetVelocityX(Vnew2x * other.GetElasticity());
         other.SetVelocityY(Vnew2y * other.GetElasticity());
         other.SetVelocityZ(Vnew2z * other.GetElasticity());
-
-        //this->SetVelocity(glm::reflect(GetVelocity(), otherdirection) *   (1/GetRadius())   );
-        //other.SetVelocity(glm::reflect(other.GetVelocity(),direction) *  (1/GetRadius())  );
     }else if(glm::length(this->GetVelocity())==0 && glm::length(other.GetVelocity())!= 0)
     {
+        //this static other moving
         this->SetVelocity(otherdirection  * glm::length(other.GetVelocity()) * this->GetElasticity()  );
         other.SetVelocity(glm::reflect(other.GetVelocity(),direction) * other.GetElasticity()  );
+
     }else if(glm::length(other.GetVelocity())==0 && glm::length(this->GetVelocity())!=0)
     {
-       other.SetVelocity(direction  * glm::length(this->GetVelocity()) * other.GetElasticity()  );
-       this->SetVelocity(glm::reflect(GetVelocity(), otherdirection)* this->GetElasticity() );
+        //this moving other static
+        other.SetVelocity(direction  * glm::length(this->GetVelocity()) * other.GetElasticity()  );
+        this->SetVelocity(glm::reflect(GetVelocity(), otherdirection)* this->GetElasticity() );
     }
 
     //collision with floor
@@ -142,6 +130,4 @@ void Sphere::CollisionResponse(Sphere& other)
         other.SetVelocity(glm::reflect(otherdirection,n) * glm::length(other.GetVelocity()) * other.GetRho());
         other.SetY(other.GetRadius());
     }
-
-
 }

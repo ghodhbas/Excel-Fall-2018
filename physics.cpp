@@ -3,16 +3,16 @@
 #include <iostream>
 #include <stdio.h>
 
+/*****************Constructor***********************************/
 Physics::Physics(float gravity)
 {
    this->gravity = gravity;
 }
-
 Physics::~Physics()
 {
-    //dtor
 }
 
+/*****************Accelerate Spheres***********************************/
 void Physics::ApplyGravity(Sphere& sphere)
 {
     //calculate new position
@@ -23,7 +23,6 @@ void Physics::ApplyGravity(Sphere& sphere)
           {
             sphere.SetY(sphere.GetRadius());
           }
-
     //sphere in motion
     if( sphere.GetHMax() > sphere.GetHStop())
     {
@@ -57,9 +56,8 @@ void Physics::ApplyGravity(Sphere& sphere)
 
         return;
     }
-
+    //STOP SPHERES
     glm::vec3 v(0,0,0);
     sphere.SetVelocity(v);
-
 }
 
