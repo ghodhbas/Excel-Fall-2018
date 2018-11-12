@@ -12,8 +12,8 @@ public:
         Physics(float gravity);
         virtual ~Physics();
         //timestep
-        float dt = 0.05f;
-        void ApplyGravity(Sphere& sphere);
+        float dt = 0.1f;
+        void ApplyGravity(Sphere& sphere, Plane& rp,Plane& lp,Plane& bp,Plane& fp);
 
         /*****GETTERS*****/
         float GetGravity(){return gravity;}
@@ -23,7 +23,7 @@ public:
         void SetGravity(float f){this->gravity =f;}
 
 private:
-    float gravity = 1.f;
+    float gravity = 9.8f;
     glm::vec3 acceleration = glm::vec3(0.f,-gravity,0.f);
 
 };

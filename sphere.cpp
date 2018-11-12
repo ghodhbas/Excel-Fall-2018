@@ -9,10 +9,6 @@ Sphere::Sphere(glm::vec3 position, float mass, float radius)
     this->position = position;
     this->mass = mass;
     this->radius = radius;
-    this->h0 = position.y;
-    this->hmax = h0;
-    this->tLast = -sqrt(2*h0/9.81f);
-    this->vmax = sqrt(2 * hmax * 9.81f);
     this->volume = 4/3 * M_PI * radius * radius * radius;
 }
 Sphere::~Sphere()
@@ -24,8 +20,8 @@ bool Sphere::DetectCollision(Plane& plane)
 {
     float distanceCenterFromPlane = fabs(glm::dot(plane.GetNormal(), GetPosition()) + plane.GetD());
     float distanceFromPlane = distanceCenterFromPlane - GetRadius();
-    distanceFromPlane =  roundf(distanceFromPlane * 100) / 100;
-     if(distanceFromPlane<0.0f)
+    //distanceFromPlane =  roundf(distanceFromPlane * 100) / 100;
+     if(distanceFromPlane<=0.0f)
     {
         return true;
     }
@@ -37,12 +33,13 @@ void Sphere::CollisionResponse(Plane& plane)
     //collision distance
     float distanceCenterFromPlane = fabs(glm::dot(plane.GetNormal(), position) + plane.GetD());
     float distanceFromPlane = fabs(distanceCenterFromPlane - GetRadius());
-    distanceFromPlane =  roundf(distanceFromPlane * 100) / 100;
+    glm::vec3 newDir = GetVelocity() - 2 * glm::dot(GetVelocity(),plane.GetNormal()) * plane.GetNormal();
+    SetVelocity(newDir * GetRho());
+    SetPosition(GetPosition() + plane.GetNormal() * distanceFromPlane);
 
-    SetVelocity(glm::reflect(GetVelocity(),plane.GetNormal()) * GetRho());
-    SetPosition(GetPosition()+ plane.GetNormal() * distanceFromPlane);
-    if( (distanceFromPlane + glm::length(GetVelocity()) )== 0 )
-        SetVMax(GetVMax()/GetRho());
+    if(glm::length(GetVelocity()) < 0.5f){
+        SetVelocity(glm::vec3(0.f,0.f,0.f));
+    }
 
 }
 
@@ -64,70 +61,35 @@ void Sphere::CollisionResponse(Sphere& other)
     float radiusDistance = this->GetRadius() + other.GetRadius();
     float centerDistance = glm::distance(other.GetPosition(), this->GetPosition());
     float distance = fabs(centerDistance - radiusDistance);
-    //direction of reflections
-	glm::vec3 direction = glm::normalize(other.GetPosition() - this->GetPosition());
-    glm::vec3 otherdirection = glm::normalize(this->GetPosition() - other.GetPosition());
+    glm::vec3 direction = glm::normalize(this->GetPosition() - other.GetPosition());
+    //
+    float a1 = glm::dot(this->GetVelocity(),direction);
+    float a2 = glm::dot(other.GetVelocity(),direction);
+    float optimizedP = (2.0 * (a1 - a2)) / (this->GetMass() + other.GetMass());
+    // Calculate v1', the new movement vector of Sphere 1
+    glm::vec3 v1New = this->GetVelocity() - optimizedP * other.GetMass() * direction;
+    // Calculate v1', the new movement vector of Sphere2
+    glm::vec3 v2New = other.GetVelocity() + optimizedP * this->GetMass() * direction;
 
-    //mass coeff
-    float mcoeff = this->GetMass()/other.GetMass();
-    if(mcoeff>1)
-    {
-        mcoeff = other.GetMass()/this->GetMass();
-        this->SetPosition(this->GetPosition()- direction * distance *  mcoeff);
-        other.SetPosition(other.GetPosition()+ direction * distance * (1-mcoeff));
-    }else if(mcoeff==1){
-        mcoeff = 0.5f;
-        this->SetPosition(this->GetPosition()- direction * distance *  mcoeff);
-        other.SetPosition(other.GetPosition()+ direction * distance * mcoeff);
-    }else{
-        this->SetPosition(this->GetPosition()- direction * distance *  (1.f-mcoeff));
-        other.SetPosition(other.GetPosition()+ direction * distance * mcoeff);
-    }
+    this->SetVelocity(v1New * this->GetElasticity());
+    other.SetVelocity(v2New * other.GetElasticity());
 
-    //two moving spheres
-    if(glm::length(this->GetVelocity())!=0 && glm::length(other.GetVelocity())!= 0)
-    {
-        //new v for first sphere using momentum and energy
-        float Vnew1x = (this->GetVelocityX() * (this->GetMass()-other.GetMass()) + (2* other.GetMass() * other.GetVelocityX())) / (this->GetMass() + other.GetMass());
-        float Vnew1y = -((this->GetVelocityY() * (this->GetMass()-other.GetMass()) + (2* other.GetMass() * other.GetVelocityY())) / (this->GetMass() + other.GetMass()));
-        float Vnew1z = (this->GetVelocityZ() * (this->GetMass()-other.GetMass()) + (2* other.GetMass() * other.GetVelocityZ())) / (this->GetMass() + other.GetMass());
-        glm::vec3 v1New(Vnew1x,Vnew1y,Vnew1z);
 
-        //new v for 2nd sphere
-        float Vnew2x = (other.GetVelocityX() * (other.GetMass()-this->GetMass()) + (2* this->GetMass() * this->GetVelocityX())) / (this->GetMass() + other.GetMass());
-        float Vnew2y = (other.GetVelocityY() * (other.GetMass()-this->GetMass()) + (2* this->GetMass() * this->GetVelocityY())) / (this->GetMass() + other.GetMass());
-        float Vnew2z = (other.GetVelocityZ() * (other.GetMass()-this->GetMass()) + (2* this->GetMass() * this->GetVelocityZ())) / (this->GetMass() + other.GetMass());
-        glm::vec3 v2New(Vnew2x,Vnew2y,Vnew2z);
-        //update speeds
-        this->SetVelocityX(Vnew1x * this->GetElasticity());
-        this->SetVelocityY(Vnew1y * this->GetElasticity());
-        this->SetVelocityZ(Vnew1z * this->GetElasticity());
-        other.SetVelocityX(Vnew2x * other.GetElasticity());
-        other.SetVelocityY(Vnew2y * other.GetElasticity());
-        other.SetVelocityZ(Vnew2z * other.GetElasticity());
-    }else if(glm::length(this->GetVelocity())==0 && glm::length(other.GetVelocity())!= 0)
-    {
-        //this static other moving
-        this->SetVelocity(otherdirection  * glm::length(other.GetVelocity()) * this->GetElasticity()  );
-        other.SetVelocity(glm::reflect(other.GetVelocity(),direction) * other.GetElasticity()  );
 
-    }else if(glm::length(other.GetVelocity())==0 && glm::length(this->GetVelocity())!=0)
-    {
-        //this moving other static
-        other.SetVelocity(direction  * glm::length(this->GetVelocity()) * other.GetElasticity()  );
-        this->SetVelocity(glm::reflect(GetVelocity(), otherdirection)* this->GetElasticity() );
-    }
+        float mcoeff = this->GetMass()/other.GetMass();
+        if(mcoeff>1)
+        {
+            mcoeff = other.GetMass()/this->GetMass();
+            this->SetPosition(this->GetPosition()+ direction * distance *  mcoeff);
+            other.SetPosition(other.GetPosition()- direction * distance * (1-mcoeff));
+        }else if(mcoeff==1){
+            mcoeff = 0.5f;
+            this->SetPosition(this->GetPosition()+ direction * distance *  mcoeff);
+            other.SetPosition(other.GetPosition()- direction * distance * mcoeff);
+        }else{
+            this->SetPosition(this->GetPosition()+ direction * distance *  (1.f-mcoeff));
+            other.SetPosition(other.GetPosition()- direction * distance * mcoeff);
+        }
 
-    //collision with floor
-    if(this->GetY() < this->GetRadius()){
-        glm::vec3 n(0.f,1.f,0.f);
-        this->SetVelocity(glm::reflect(direction,n)* glm::length(other.GetVelocity()) * this->GetRho());
-        this->SetY(this->GetRadius());
-    }
-    if(other.GetY()<other.GetRadius())
-    {
-        glm::vec3 n(0.f,1.f,0.f);
-        other.SetVelocity(glm::reflect(otherdirection,n) * glm::length(other.GetVelocity()) * other.GetRho());
-        other.SetY(other.GetRadius());
-    }
+
 }

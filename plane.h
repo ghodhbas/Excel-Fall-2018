@@ -10,6 +10,10 @@ public:
     Plane Normalized();\
     glm::vec3 GetNormal(){return N;}
     float GetD(){return D;}
+    float Getx(){return N.x;}
+    float Gety(){return N.y;}
+    float Getz(){return N.z;}
+
 private:
     glm::vec3 N;
     float D;

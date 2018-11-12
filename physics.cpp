@@ -13,51 +13,54 @@ Physics::~Physics()
 }
 
 /*****************Accelerate Spheres***********************************/
-void Physics::ApplyGravity(Sphere& sphere)
-{
-    //calculate new position
-          float hnew = sphere.GetY() + sphere.GetVelocityY() * dt - 0.5 * gravity * dt *dt;
-          float xnew = sphere.GetX() + sphere.GetVelocityX() * dt;
-          float znew = sphere.GetZ() + sphere.GetVelocityZ() * dt;
-          if(hnew< sphere.GetRadius())
-          {
-            sphere.SetY(sphere.GetRadius());
-          }
-    //sphere in motion
-    if( sphere.GetHMax() > sphere.GetHStop())
-    {
-        //check if the sphere is in free fall mode
-        if(sphere.GetState())
-        {
-        //calculate new position
-           hnew = sphere.GetY() + sphere.GetVelocityY() * dt - 0.5 * gravity * dt *dt;
-           xnew = sphere.GetX() + sphere.GetVelocityX() * dt;
-           znew = sphere.GetZ() + sphere.GetVelocityZ() * dt;
-          //collision with floor
-          if(hnew< sphere.GetRadius())
-          {
-            sphere.SetTime(sphere.GetTLast() + 2 * sqrt(2*sphere.GetHMax()/gravity));
-            sphere.SetState(false);
-            sphere.SetTLast(sphere.GetTime() + sphere.GetTau());
-            sphere.SetY(sphere.GetRadius());
-          }else{
-            sphere.SetTime(sphere.GetTime() + dt);
-            sphere.SetVelocity(glm::vec3(sphere.GetVelocityX(),sphere.GetVelocityY() - gravity * dt,sphere.GetVelocityZ()));
-            sphere.SetPosition(glm::vec3(xnew,hnew,znew));
-          }
-        }else{
-            sphere.SetTime(sphere.GetTime()+sphere.GetTau());
-            sphere.SetVMax(sphere.GetVMax() * sphere.GetRho());
-            sphere.SetVelocity(glm::vec3(sphere.GetVelocityX(),sphere.GetVMax(),sphere.GetVelocityZ()));
-            sphere.SetState(true);
-            sphere.SetY(sphere.GetRadius());
-        }
-        sphere.SetHmax(0.5f * sphere.GetVMax()*sphere.GetVMax()/gravity);
 
-        return;
+void Physics::ApplyGravity(Sphere& sphere, Plane& rp,Plane& lp,Plane& bp,Plane& fp){
+        //calculate new position
+    //if( glm::length(sphere.GetVelocity()) > 0.1f || sphere.GetY()>100.f){
+        if(!(sphere.DetectCollision(rp) || sphere.DetectCollision(fp) || sphere.DetectCollision(lp) || sphere.DetectCollision(bp))){
+            float newVelocityY = sphere.GetVelocityY()- gravity * dt *dt;
+            sphere.SetVelocityY(newVelocityY);
+            float hnew = sphere.GetY() + sphere.GetVelocityY() * dt;
+            float xnew = sphere.GetX() + sphere.GetVelocityX() * dt;
+            float znew = sphere.GetZ() + sphere.GetVelocityZ() * dt;
+            glm::vec3 pos(xnew,hnew,znew);
+            sphere.SetPosition(pos);
+        }
+    //}
+        sphere.SetPosition(sphere.GetPosition());
+
+    if(glm::length(sphere.GetVelocity())<1.f && sphere.DetectCollision(rp)){
+        sphere.SetVelocity(-lp.GetNormal() * 0.5f);
+        float hnew = sphere.GetY() + sphere.GetVelocityY() * dt;
+        float xnew = sphere.GetX() + sphere.GetVelocityX() * dt;
+        float znew = sphere.GetZ() + sphere.GetVelocityZ() * dt;
+        glm::vec3 pos(xnew,hnew,znew);
+        sphere.SetPosition(pos);
+
     }
-    //STOP SPHERES
-    glm::vec3 v(0,0,0);
-    sphere.SetVelocity(v);
+    if(glm::length(sphere.GetVelocity())<1.f && sphere.DetectCollision(lp) && sphere.GetY()>10.f){
+        sphere.SetVelocity(-rp.GetNormal() * 0.5f);
+        float hnew = sphere.GetY() + sphere.GetVelocityY() * dt;
+        float xnew = sphere.GetX() + sphere.GetVelocityX() * dt;
+        float znew = sphere.GetZ() + sphere.GetVelocityZ() * dt;
+        glm::vec3 pos(xnew,hnew,znew);
+        sphere.SetPosition(pos);
+    }
+    if(glm::length(sphere.GetVelocity())<1.f && sphere.DetectCollision(bp) && sphere.GetY()>10.f){
+        sphere.SetVelocity(-fp.GetNormal()* 0.5f);
+        float hnew = sphere.GetY() + sphere.GetVelocityY() * dt;
+        float xnew = sphere.GetX() + sphere.GetVelocityX() * dt;
+        float znew = sphere.GetZ() + sphere.GetVelocityZ() * dt;
+        glm::vec3 pos(xnew,hnew,znew);
+        sphere.SetPosition(pos);
+    }
+    if(glm::length(sphere.GetVelocity())<0.5f && sphere.DetectCollision(fp) && sphere.GetY()>10.f){
+        sphere.SetVelocity(-bp.GetNormal() * 0.5f );
+        float hnew = sphere.GetY() + sphere.GetVelocityY() * dt;
+        float xnew = sphere.GetX() + sphere.GetVelocityX() * dt;
+        float znew = sphere.GetZ() + sphere.GetVelocityZ() * dt;
+        glm::vec3 pos(xnew,hnew,znew);
+        sphere.SetPosition(pos);
+    }
 }
 

@@ -7,7 +7,7 @@ float cameraSpeed = 3.f;
 float lx=0.0f,lz=-1.0f;
 
 // XZ position of the camera
-float x=0.0f, y=10.0f, z=50.0f;
+float x=0.0f, y=75.0f, z=160.0f;
 
 // the key states. These variables will be zero
 //when no key is being presses

@@ -8,7 +8,7 @@
 #define HEIGHT 1000
 
 int main(int argc, char **argv) {
-
+    getConePoints();
 	// init GLUT and create window
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);

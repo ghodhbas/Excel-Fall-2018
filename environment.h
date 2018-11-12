@@ -10,6 +10,10 @@
 #include <vector>
 #include <thread>
 #include "camera.h"
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/rotate_vector.hpp>
+#include <glm/gtx/transform.hpp>
+
 
 /*************************************************************************** PARAMETERS **************************************************************/
 //fame - time management
@@ -19,26 +23,39 @@ std::vector<Sphere> SphereContainer;
 //Physics handler
 Physics physics(9.81f);
 
+float c = 1.2f;
 /* Cone Creation*/
 //rightplane
-glm::vec3 N(-0.5f,0.8f,0.f);
-Plane rightPlane(N,9.5f);
+glm::vec3 N(-1.f,1.f*c,0.f);
+Plane rightPlane(N,0.f);
 Plane rp = rightPlane.Normalized();
+
 //leftplane
-glm::vec3 N2(0.5f,0.8f,0.f);
-Plane leftPlane(N2,9.5f);
+//glm::mat4 rotationMat = glm::mat4(1.0); // Creates a identity matri
+//glm::mat4 rot = glm::rotate(rotationMat, 90.0f, glm::vec3(0.0, 0.0, 1.0));
+//glm::vec3 N2 = glm::vec3(rot * glm::vec4(rp.GetNormal(), 1.0));
+glm::vec3 N2(1.f,1.f*c,0.f);
+Plane leftPlane(N2,0);
 Plane lp = leftPlane.Normalized();
-//leftplane
-glm::vec3 N3(0.f,0.8f,-0.5f);
-Plane backPlane(N3,19.f);
+
+//back plane
+glm::vec3 N3(0.f,1.f*c,1.f);
+Plane backPlane(N3,0.f);
 Plane bp = backPlane.Normalized();
-//leftplane
-glm::vec3 N4(0.f,0.8f,0.5f);
-Plane frontPlane(N4,19.f);
+
+//fronntplane
+//glm::mat4 rot3 = glm::rotate(rotationMat, 90.0f, glm::vec3(1.0, 0.0, 0.0));
+//glm::vec3 N4 = glm::vec3(rot3 * glm::vec4(bp.GetNormal(), 1.0));
+glm::vec3 N4(0.f,1.f*c,-1.f);
+Plane frontPlane(N4,0.f);
 Plane fp = frontPlane.Normalized();
 
-/*************************************************************************** GENERATION METHODS **************************************************************/
+//intersections
+float x1 = 0;
+float x2,x3,x4,z1,z2,z3,z4,y11,y22,y33,y44;
+int count=0;
 
+/*************************************************************************** GENERATION METHODS **************************************************************/
 /*Random Float Generator*/
 float RandomFloat(float a, float b) {
     float random = ((float) rand()) / (float) RAND_MAX;
@@ -61,16 +78,18 @@ float RandomRadius(float alpha, float beta, float dMin, float dMax){
 
 /*Randomly creates a Sphere and add it to the container*/
 void createSphere()
-{
-    if( rand() % 10 <= 1)
-    {
-        //randomize position
-        glm::vec3 pos(RandomFloat(-17.924f,17.924f),100.f,RandomFloat(-36.f,36.f));
-        //create sphere
-        float mass = RandomFloat(0.2f,0.8f);
-        //mass vol 2.4 gram per cubic cm
-        float r = mass*5.f;
-        SphereContainer.push_back(Sphere(pos,mass,r));
+{   if(count < 410){
+        if( rand() % 10 <= 1)
+        {
+            //randomize position
+            glm::vec3 pos(RandomFloat(-17.924f,17.924f),200.f,RandomFloat(-36.f,36.f));
+            //create sphere
+            float mass = RandomFloat(0.2f,0.8f);
+            //mass vol 2.4 gram per cubic cm
+            float r = mass*5.f;
+            SphereContainer.push_back(Sphere(pos,mass,r));
+            count++;
+        }
     }
 }
 
@@ -94,39 +113,74 @@ void drawGrid()
     glEnd();
 }
 
+void getConePoints(){
+    //intersection between rp and fp at hight 100
+    glm::vec3 dir = glm::cross(rp.GetNormal(),fp.GetNormal());
+    dir = glm::normalize(dir);
+    dir = -dir * 100.f;
+
+    x1=dir.x;
+    y11=dir.y;
+    z1=dir.z;
+
+    //rp bp intersectiom
+    dir = glm::cross(rp.GetNormal(),bp.GetNormal());
+    dir = glm::normalize(dir);
+    dir = dir * 100.f;
+
+    x2=dir.x;
+    y22=dir.y;
+    z2=dir.z;
+
+    // lp bp intersectiom
+    dir = glm::cross(lp.GetNormal(),bp.GetNormal());
+    dir = glm::normalize(dir);
+    dir = -dir * 100.f;
+
+    x3=dir.x;
+    y33=dir.y;
+    z3=dir.z;
+
+    //fp lp intersectiom
+    dir = glm::cross(fp.GetNormal(),lp.GetNormal());
+    dir = glm::normalize(dir);
+    dir = -dir * 100.f;
+
+    x4=dir.x;
+    y44=dir.y;
+    z4=dir.z;
+}
+
 void DrawCone()
 {
-    //draw side
-    glBegin(GL_QUADS);
+    //draw right
+    glBegin(GL_TRIANGLES);
     glColor4f(0.f,0.7f,0.5f,0.5f);
-    glVertex3f(50.f,20.047f,-68.752f);
-    glVertex3f(17.924f,0.f,-36.f);
-    glVertex3f(17.924f,0.f,36.f);
-    glVertex3f(50.f,20.047f,68.752f);
+    glVertex3f(0.f,0.f,0.f);
+    glVertex3f(x1,y11,z1);
+    glVertex3f(x2,y22,z2);
     glEnd();
-    //draw left side
-    glBegin(GL_QUADS);
+
+   //draw left side
+    glBegin(GL_TRIANGLES);
     glColor4f(0.f,0.7f,0.5f,0.5f);
-    glVertex3f(-50.f,20.047f,-68.752f);
-    glVertex3f(-17.924f,0.f,-36.f);
-    glVertex3f(-17.924f,0.f,36.f);
-    glVertex3f(-50.f,20.047f,68.752f);
-    glEnd();
-    //draw left side
-    glBegin(GL_QUADS);
-    glColor4f(0.f,0.7f,0.5f,0.5f);
-    glVertex3f(-50.f,20.5f,68.752f);
-    glVertex3f(50.f,20.5f, 68.752f);
-    glVertex3f(17.924f,0.f,36.f);
-    glVertex3f(-17.924f,0.f,36.f);
+    glVertex3f(0.f,0.f,0.f);
+    glVertex3f(x4,y44,z4);
+    glVertex3f(x3,y33,z3);
     glEnd();
     //draw front side
-    glBegin(GL_QUADS);
+    glBegin(GL_TRIANGLES);
     glColor4f(0.f,0.7f,0.5f,0.5f);
-    glVertex3f(-50.f,20.5f,-68.752f);
-    glVertex3f(50.f,20.5f, -68.752f);
-    glVertex3f(17.924f,0.f,-36.f);
-    glVertex3f(-17.924f,0.f,-36.f);
+    glVertex3f(0.f,0.f,0.f);
+    glVertex3f(x4,y44,z4);
+    glVertex3f(x1,y11,z1);
+    glEnd();
+    //draw back side
+    glBegin(GL_TRIANGLES);
+    glColor4f(0.f,0.7f,0.5f,0.5f);
+    glVertex3f(0.f,0.f,0.f);
+    glVertex3f(x2,y22,z2);
+    glVertex3f(x3,y33,z3);
     glEnd();
 }
 
@@ -146,28 +200,37 @@ void displayFPS()
 }
 
 /******************************************************Physics handling***************************************************************/
-
 /*Handle Sphere animation and physics of sphere*/
 void animateSphere(Sphere& sphere, int i)
 {
+    //handle sphere gravity and plane collition
+    physics.ApplyGravity(sphere,rp,lp,bp,fp);
+
+    //side collisions
+    if(sphere.DetectCollision(rp)){
+        sphere.CollisionResponse(rp);
+    }
+
+    if(sphere.DetectCollision(lp)){
+        sphere.CollisionResponse(lp);
+    }
+
+    if(sphere.DetectCollision(bp)){
+        sphere.CollisionResponse(bp);
+    }
+
+    if(sphere.DetectCollision(fp)){
+        sphere.CollisionResponse(fp);
+    }
+    //Sphere Collisions
       for(int j=i+1;j<SphereContainer.size(); j++)
     {
         if(sphere.DetectCollision(SphereContainer[j])){
             sphere.CollisionResponse(SphereContainer[j]);
         }
     }
-    //side collisions
-    if(sphere.DetectCollision(rp))
-        sphere.CollisionResponse(rp);
-    if(sphere.DetectCollision(lp))
-        sphere.CollisionResponse(lp);
-    if(sphere.DetectCollision(bp))
-        sphere.CollisionResponse(bp);
-    if(sphere.DetectCollision(fp))
-        sphere.CollisionResponse(fp);
-    //handle sphere gravity and plane collition
-    physics.ApplyGravity(sphere);
 }
+
 /*apply physics on all spheres in the environment*/
 void animate()
 {
@@ -179,14 +242,12 @@ void animate()
 }
 
 /********************************************************************************Rendering**************************************************/
-
 /*Draw Sphere*/
 void drawSphere(Sphere& sphere) {
 	glColor4f(0.6f,0.3f,0.1f,1.f);
     //draw in correct postions
 	glTranslatef(sphere.GetX() ,sphere.GetY(),sphere.GetZ());
-	glutSolidSphere(sphere.GetRadius(),8,8);
-
+	glutSolidSphere(sphere.GetRadius(),16,16);
 }
 /*Render Spheres*/
 void render()
@@ -216,8 +277,6 @@ void renderScene(void) {
 	gluLookAt(	x, y, z,
                 0,0,0,
 			0.0f, 1.0f,  0.0f);
-    // Draw Grid
-    drawGrid();
     //create ball
     std::thread crs(createSphere);
     //apply physics
@@ -225,12 +284,14 @@ void renderScene(void) {
     //render Spheres
     render();
     //render cone
+    drawGrid();
     DrawCone();
     //calculate the frames per second
     displayFPS();
     //join threads
     spherePhysics.join();
     crs.join();
+    if(count%100 == 0) std::cout<<"Count: "<<count<<std::endl;
     //swap buffers
     glutSwapBuffers();
 }
