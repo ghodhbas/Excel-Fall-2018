@@ -17,43 +17,57 @@
 
 /*************************************************************************** PARAMETERS **************************************************************/
 //fame - time management
+bool showSimul= true;
 int frame=0,timebase,currenttime;
+unsigned long timeStep =0;
+unsigned long maxTimeStep=0;
 //spheres container
 std::vector<Sphere> SphereContainer;
 //Physics handler
-Physics physics(9.81f);
+Physics physics(9.81f,0.99f);
+
+int maxSphereCount = 0;
+int count=0;
+float dropHeight = 200.f;
 
 float c = 1.2f;
+glm::vec3 N(-1.f,1.f,0.f);
+Plane rp(N,0.f);
+Plane fp(N,0.f);;
+Plane bp(N,0.f);;
+Plane lp(N,0.f);;
+
 /* Cone Creation*/
-//rightplane
-glm::vec3 N(-1.f,1.f*c,0.f);
-Plane rightPlane(N,0.f);
-Plane rp = rightPlane.Normalized();
+void createCone(float c){
+    //rightplane
+    glm::vec3 N(-1.f,1.f*c,0.f);
+    Plane rightPlane(N,0.f);
+    rp = rightPlane.Normalized();
 
-//leftplane
-//glm::mat4 rotationMat = glm::mat4(1.0); // Creates a identity matri
-//glm::mat4 rot = glm::rotate(rotationMat, 90.0f, glm::vec3(0.0, 0.0, 1.0));
-//glm::vec3 N2 = glm::vec3(rot * glm::vec4(rp.GetNormal(), 1.0));
-glm::vec3 N2(1.f,1.f*c,0.f);
-Plane leftPlane(N2,0);
-Plane lp = leftPlane.Normalized();
+    //leftplane
+    //glm::mat4 rotationMat = glm::mat4(1.0); // Creates a identity matri
+    //glm::mat4 rot = glm::rotate(rotationMat, 90.0f, glm::vec3(0.0, 0.0, 1.0));
+    //glm::vec3 N2 = glm::vec3(rot * glm::vec4(rp.GetNormal(), 1.0));
+    glm::vec3 N2(1.f,1.f*c,0.f);
+    Plane leftPlane(N2,0);
+    lp = leftPlane.Normalized();
 
-//back plane
-glm::vec3 N3(0.f,1.f*c,1.f);
-Plane backPlane(N3,0.f);
-Plane bp = backPlane.Normalized();
+    //back plane
+    glm::vec3 N3(0.f,1.f*c,1.f);
+    Plane backPlane(N3,0.f);
+    bp = backPlane.Normalized();
 
-//fronntplane
-//glm::mat4 rot3 = glm::rotate(rotationMat, 90.0f, glm::vec3(1.0, 0.0, 0.0));
-//glm::vec3 N4 = glm::vec3(rot3 * glm::vec4(bp.GetNormal(), 1.0));
-glm::vec3 N4(0.f,1.f*c,-1.f);
-Plane frontPlane(N4,0.f);
-Plane fp = frontPlane.Normalized();
+    //fronntplane
+    //glm::mat4 rot3 = glm::rotate(rotationMat, 90.0f, glm::vec3(1.0, 0.0, 0.0));
+    //glm::vec3 N4 = glm::vec3(rot3 * glm::vec4(bp.GetNormal(), 1.0));
+    glm::vec3 N4(0.f,1.f*c,-1.f);
+    Plane frontPlane(N4,0.f);
+    fp = frontPlane.Normalized();
+}
 
 //intersections
 float x1 = 0;
 float x2,x3,x4,z1,z2,z3,z4,y11,y22,y33,y44;
-int count=0;
 
 /*************************************************************************** GENERATION METHODS **************************************************************/
 /*Random Float Generator*/
@@ -78,11 +92,11 @@ float RandomRadius(float alpha, float beta, float dMin, float dMax){
 
 /*Randomly creates a Sphere and add it to the container*/
 void createSphere()
-{   if(count < 410){
+{   if(count < maxSphereCount+1){
         if( rand() % 10 <= 1)
         {
             //randomize position
-            glm::vec3 pos(RandomFloat(-17.924f,17.924f),200.f,RandomFloat(-36.f,36.f));
+            glm::vec3 pos(RandomFloat(-17.924f,17.924f),dropHeight,RandomFloat(-36.f,36.f));
             //create sphere
             float mass = RandomFloat(0.2f,0.8f);
             //mass vol 2.4 gram per cubic cm
@@ -113,11 +127,11 @@ void drawGrid()
     glEnd();
 }
 
-void getConePoints(){
+void getConePoints(float height){
     //intersection between rp and fp at hight 100
     glm::vec3 dir = glm::cross(rp.GetNormal(),fp.GetNormal());
     dir = glm::normalize(dir);
-    dir = -dir * 100.f;
+    dir = -dir * height;
 
     x1=dir.x;
     y11=dir.y;
@@ -126,7 +140,7 @@ void getConePoints(){
     //rp bp intersectiom
     dir = glm::cross(rp.GetNormal(),bp.GetNormal());
     dir = glm::normalize(dir);
-    dir = dir * 100.f;
+    dir = dir * height;
 
     x2=dir.x;
     y22=dir.y;
@@ -135,7 +149,7 @@ void getConePoints(){
     // lp bp intersectiom
     dir = glm::cross(lp.GetNormal(),bp.GetNormal());
     dir = glm::normalize(dir);
-    dir = -dir * 100.f;
+    dir = -dir * height;
 
     x3=dir.x;
     y33=dir.y;
@@ -144,7 +158,7 @@ void getConePoints(){
     //fp lp intersectiom
     dir = glm::cross(fp.GetNormal(),lp.GetNormal());
     dir = glm::normalize(dir);
-    dir = -dir * 100.f;
+    dir = -dir * height;
 
     x4=dir.x;
     y44=dir.y;
@@ -247,7 +261,7 @@ void drawSphere(Sphere& sphere) {
 	glColor4f(0.6f,0.3f,0.1f,1.f);
     //draw in correct postions
 	glTranslatef(sphere.GetX() ,sphere.GetY(),sphere.GetZ());
-	glutSolidSphere(sphere.GetRadius(),16,16);
+	glutSolidSphere(sphere.GetRadius(),10,10);
 }
 /*Render Spheres*/
 void render()
@@ -263,37 +277,50 @@ void render()
 
 /*Render Environment*/
 void renderScene(void) {
-    //camera movement
-	if (deltaMove || deltaMoveV)
-		computePos(deltaMove, deltaMoveV);
+    if(showSimul){
+        //camera movement
+        if (deltaMove || deltaMoveV)
+            computePos(deltaMove, deltaMoveV);
 
-	// Clear Color and Depth Buffers
-	glClearColor(0.f,0.15f,0.3f,0.7f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        // Clear Color and Depth Buffers
+        glClearColor(0.f,0.15f,0.3f,0.7f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// Reset transformations
-	glLoadIdentity();
-	// Set the camera
-	gluLookAt(	x, y, z,
-                0,0,0,
-			0.0f, 1.0f,  0.0f);
+        // Reset transformations
+        glLoadIdentity();
+        // Set the camera
+        gluLookAt(	x, y, z,
+                    0,0,0,
+                0.0f, 1.0f,  0.0f);
+    }
     //create ball
     std::thread crs(createSphere);
     //apply physics
     std::thread spherePhysics(animate);
-    //render Spheres
-    render();
-    //render cone
-    drawGrid();
-    DrawCone();
+    if(showSimul){
+        //std::cout<<"RENDERING"<<std::endl;
+        //render Spheres
+        render();
+        //render cone
+        drawGrid();
+        DrawCone();
+    }
     //calculate the frames per second
     displayFPS();
     //join threads
     spherePhysics.join();
     crs.join();
     if(count%100 == 0) std::cout<<"Count: "<<count<<std::endl;
+
+    timeStep++;
+    //std::cout<<"time: "<<timeStep<<std::endl;
     //swap buffers
-    glutSwapBuffers();
+    if(showSimul){
+        glutSwapBuffers();
+    }
+    if(timeStep>maxTimeStep){
+        exit(1);
+    }
 }
 
 

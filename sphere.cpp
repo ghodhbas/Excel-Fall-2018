@@ -15,6 +15,7 @@ Sphere::~Sphere()
 {
 }
 
+
 /*****************COLLISION WITH PLANES / CONE***********************************/
 bool Sphere::DetectCollision(Plane& plane)
 {

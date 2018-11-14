@@ -9,6 +9,13 @@
 class Sphere
 {
     public:
+        //bounce physics
+        static float rho; //restituion coeff
+        //particle elasticity
+        static float pE;
+
+
+
         Sphere(glm::vec3 position, float mass, float radius);
 
         virtual ~Sphere();
@@ -33,9 +40,9 @@ class Sphere
         float GetFix(){return fix;}
 
 
-        float GetRho(){return rho;}
+        static float GetRho(){return rho;}
         float GetVolume(){return volume;}
-        float GetElasticity(){return pE;}
+        static float GetElasticity(){return pE;}
 
         /*Setters*/
         void SetX(float x){position.x = x;}
@@ -56,10 +63,7 @@ private:
     float mass;
     float radius;
     float volume;
-    //bounce physics
-    float rho = 0.1f; //restituion coeff
-    //particle elasticity
-    float pE= 0.6f;
+
     bool fix = false;
 
 };
