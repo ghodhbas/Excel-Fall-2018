@@ -25,14 +25,19 @@ class Surface_Analyzer
             }
         }
 
+        void output_surfacePoints(std::vector<Sphere>& SurfacePoints);
+
+        float roundPoint(float p){
+            return roundf(p * 100) / 100;
+        }
+
 
         Surface_Analyzer();
         virtual ~Surface_Analyzer();
 
-        std::vector<Sphere> SurfacePoints;
 
         float x0,z0;
-        void GetSurfacePoints(std::vector<Sphere>& SphereContainer);
+        void GetSurfacePoints(std::vector<Sphere>& SphereContainer, std::vector<Sphere>& SurfacePoints);
 
 
     protected:

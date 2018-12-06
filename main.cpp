@@ -120,8 +120,9 @@ int main(int argc, char **argv) {
     std::cout<<"Data Sorted... "<<std::endl;
 
     Surface_Analyzer* SA = new Surface_Analyzer();
-    SA->GetSurfacePoints(SphereContainer);
-
+    std::vector<Sphere> SurfacePoints;
+    SA->GetSurfacePoints(SphereContainer, SurfacePoints);
+    SA->output_surfacePoints(SurfacePoints);
 
 	return 1;
 }
