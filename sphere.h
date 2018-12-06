@@ -14,8 +14,6 @@ class Sphere
         //particle elasticity
         static float pE;
 
-
-
         Sphere(glm::vec3 position, float mass, float radius);
 
         virtual ~Sphere();
@@ -55,6 +53,27 @@ class Sphere
         void SetVelocityZ(float vZ){this->velocity.z = vZ;}
         void SetRadius(float radius){this->radius=radius;}
         void SetFix(){this->fix=true;}
+
+        //comparator
+        static bool comp(Sphere s1, Sphere s2){
+            if(s1.GetX()<s2.GetX()){
+                return true;
+            }else if(s1.GetX()>s2.GetX()){
+                return false;
+            }else{
+                if(s1.GetZ()<s2.GetZ()){
+                    return true;
+                }else if ( s1.GetZ()>s2.GetZ()){
+                    return false;
+                }else{
+                    if(s1.GetY()<s2.GetY()){
+                        return true;
+                    }else{
+                        return false;
+                    }
+                }
+            }
+        }
 
 
 private:

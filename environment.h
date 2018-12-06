@@ -79,14 +79,14 @@ float RandomFloat(float a, float b) {
 }
 
 /*Generate Randomn Radius based on beta Distrib*/
-float RandomRadius(float alpha, float beta, float dMin, float dMax){
+float RandomRadius(double alpha, double beta, float dMin, float dMax){
     float b = log10(dMin);	//Linear rescaling factors for desired dMin, dMax range
     float a = log10(dMax) - b;
     //Fill in code for generating k
     float k = (float) rand()/RAND_MAX;
     float betaScore = (a + b - 1 - (log10(1/k))/3)/a;	//Corresponding score of beta dist
     int ifault;	//For xinbeta() error flag, currently being ignored
-    float betaValue = xinbta(beta, alpha, log(betaScore), betaScore, ifault);	//Inverting beta dist
+    double betaValue = xinbta(beta, alpha, log(betaScore), betaScore, ifault);	//Inverting beta dist
     return pow(10,betaValue);	//Undo log scale
 }
 
@@ -96,10 +96,12 @@ void createSphere()
         if( rand() % 10 <= 1)
         {
             //randomize position
-            glm::vec3 pos(RandomFloat(-17.924f,17.924f),dropHeight,RandomFloat(-36.f,36.f));
+            glm::vec3 pos(RandomFloat(-20.f,20.f),dropHeight,RandomFloat(-20.f,20.f));
             //create sphere
             float mass = RandomFloat(0.2f,0.8f);
             //mass vol 2.4 gram per cubic cm
+            //float r = RandomRadius(0.2,0.2,1.f,5.f);
+            //float mass = r/4;
             float r = mass*5.f;
             SphereContainer.push_back(Sphere(pos,mass,r));
             count++;
@@ -318,9 +320,7 @@ void renderScene(void) {
     if(showSimul){
         glutSwapBuffers();
     }
-    if(timeStep>maxTimeStep){
-        exit(1);
-    }
+
 }
 
 

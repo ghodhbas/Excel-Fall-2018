@@ -3,12 +3,16 @@
 #include <GL/glut.h>
 //full header file with functionality
 #include "environment.h"
+#include <algorithm>
+#include "surface_analyzer.h"
 
 #define WIDTH 1400
 #define HEIGHT 1000
 
 float Sphere::rho = 0.3f;
 float Sphere::pE = 0.8f;
+
+
 
 int main(int argc, char **argv) {
     //directory
@@ -50,8 +54,8 @@ int main(int argc, char **argv) {
         //number of disks
         maxSphereCount = 1000;
         //max time steps
-        maxTimeStep = 10000;
-        showSimul=true;
+        maxTimeStep = 5000;
+        showSimul=false;
         getConePoints(height);
     }
 
@@ -99,11 +103,28 @@ int main(int argc, char **argv) {
         // enter GLUT event processing cycle
         glutMainLoop();
     }else{
-        while(true){
+        int i=0;
+        //add extra time for system to settle
+        while(i<maxTimeStep){
             renderScene();
+            i++;
         }
     }
+
+    std::cout<<SphereContainer.size()<<std::endl;
+
+    std::cout<<std::endl;
+    std::cout<<std::endl;
+    std::cout<<"Data Generation Complete, Starting Sorting and Surface points generation: "<<std::endl;
+    std::sort(SphereContainer.begin(),SphereContainer.end(), Sphere::comp);
+    std::cout<<"Data Sorted... "<<std::endl;
+
+    Surface_Analyzer* SA = new Surface_Analyzer();
+    SA->GetSurfacePoints(SphereContainer);
 
 
 	return 1;
 }
+
+
+

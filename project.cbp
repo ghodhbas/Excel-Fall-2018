@@ -53,6 +53,8 @@
 		<Unit filename="plane.h" />
 		<Unit filename="sphere.cpp" />
 		<Unit filename="sphere.h" />
+		<Unit filename="surface_analyzer.cpp" />
+		<Unit filename="surface_analyzer.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

@@ -24,6 +24,8 @@ public:
         void SetGravity(float f){this->gravity =f;}
         void SetDrag(float drag){this->drag=drag;}
 
+
+
 private:
     float gravity = 9.8f;
     //particle drag
