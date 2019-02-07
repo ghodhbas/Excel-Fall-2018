@@ -1,10 +1,39 @@
 #include "surface_analyzer.h"
 #include <math.h>
 #include <algorithm>
-Surface_Analyzer::Surface_Analyzer()
+
+Surface_Analyzer::Surface_Analyzer(float ratioOfAnalysis, std::vector<Sphere>& SphereContainer, float in)
 {
-    z0 = -25.f;
-    x0 = -25.f;
+    //calculate min x , max x, min z, max z
+    xMax = SphereContainer[0].GetX();
+    xMin = SphereContainer[0].GetX();
+    zMax = SphereContainer[0].GetZ();
+    zMin = SphereContainer[0].GetZ();
+    for(int i =1; i< SphereContainer.size();i++){
+        if( SphereContainer[i].GetX()> xMax) xMax = SphereContainer[i].GetX();
+        if( SphereContainer[i].GetX()< xMin) xMin = SphereContainer[i].GetX();
+        if( SphereContainer[i].GetZ()> zMax) zMax = SphereContainer[i].GetZ();
+        if( SphereContainer[i].GetZ()< zMin) zMin = SphereContainer[i].GetZ();
+    }
+
+    std::cout<<"xMin before ratio: "<<xMin<<std::endl;
+    std::cout<<"xMax before ratio: "<<xMax<<std::endl;
+    std::cout<<"zMin before ratio:: "<<zMin<<std::endl;
+    std::cout<<"zMax before ratio: "<<zMax<<std::endl;
+    std::cout<<std::endl;
+    //use ratio to decide where to start and end
+    xMin = - ((xMax-xMin)*ratioOfAnalysis)/2;
+    xMax = -xMin;
+    zMin = - ((zMax-zMin)*ratioOfAnalysis)/2;
+    zMax = -zMin;
+    //save increment?
+    incr = in;
+
+    std::cout<<"xMin: "<<xMin<<std::endl;
+    std::cout<<"xMax: "<<xMax<<std::endl;
+    std::cout<<"zMin: "<<zMin<<std::endl;
+    std::cout<<"zMax: "<<zMax<<std::endl;
+    std::cout<<"incr: "<<incr<<std::endl;
 }
 
 Surface_Analyzer::~Surface_Analyzer()
@@ -14,22 +43,29 @@ Surface_Analyzer::~Surface_Analyzer()
 
 
 void Surface_Analyzer::GetSurfacePoints(std::vector<Sphere>& SphereContainer, std::vector<Sphere>& SurfacePoints){
-    while(x0<25){
-        while(z0<25){
+    x0= xMin;
+    z0 = zMin;
+    //intital x0 is less then upper bound
+    while(x0<xMax){
+        //intital z0 is less than upper bound
+        while(z0<zMax){
+            //container for temporary relevent spheres
             std::vector<SP> temp;
+            //iterate through the spheres
             for(int indx =0; indx<SphereContainer.size();indx++){
+                //check if sphere position is within range
                 float valid  =  pow(SphereContainer[indx].GetX() - x0,2) + pow(SphereContainer[indx].GetZ() - z0,2);
                 if(valid < pow(SphereContainer[indx].GetRadius(),2)){
                     float y = pow(SphereContainer[indx].GetRadius(),2) - pow(x0-SphereContainer[indx].GetX(),2) - pow(z0-SphereContainer[indx].GetZ(),2);
                     y = pow(y,0.5f);
                     y= y+ SphereContainer[indx].GetY();
-
                     temp.push_back(SP(indx,y));
                 }
             }
 
+            //If there are any relevent spheres
             if(temp.size()>0){
-                //sort array
+                //sort array of these relevent spheres
                 std::sort(temp.begin(),temp.end(),comp);
                 //get highest sphere
                 Sphere s = SphereContainer[temp[temp.size()-1].ind];
@@ -57,10 +93,12 @@ void Surface_Analyzer::GetSurfacePoints(std::vector<Sphere>& SphereContainer, st
                 //insert if there are no duplicates
                 if(!duplicate) SurfacePoints.push_back(s);
             }
-            z0 = z0+ 1.f;
+            //increment z
+            z0 = z0+ incr;
         }
-        x0 = x0+ 1.f;
-        z0 = -25.f;
+        // increment x and reset z
+        x0 = x0 + incr;
+        z0 = zMin;
     }
 }
 

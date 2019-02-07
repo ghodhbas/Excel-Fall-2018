@@ -15,6 +15,10 @@ float Sphere::pE = 0.8f;
 
 
 int main(int argc, char **argv) {
+    //analysis variables, ratio and increment
+    float ratioOfAnalysis, in;
+
+
     //directory
     std::cout << argv[0] << std::endl;
     //with input
@@ -36,6 +40,9 @@ int main(int argc, char **argv) {
         //max time steps
         maxTimeStep = atof(argv[9]);
         showSimul=atof(argv[10]);
+        //analysis data
+        ratioOfAnalysis = atof(argv[11]);
+        in = atof(argv[12]);
         getConePoints(height);
     }else{
         //height of cone
@@ -55,8 +62,13 @@ int main(int argc, char **argv) {
         maxSphereCount = 1000;
         //max time steps
         maxTimeStep = 5000;
-        showSimul=false;
+        showSimul=true;
         getConePoints(height);
+
+        //init analysis variabless
+        ratioOfAnalysis= 0.5f;
+        in = 2.f;
+
     }
 
     std::cout<<"gravity : "<<physics.GetGravity()<<std::endl;
@@ -119,7 +131,7 @@ int main(int argc, char **argv) {
     std::sort(SphereContainer.begin(),SphereContainer.end(), Sphere::comp);
     std::cout<<"Data Sorted... "<<std::endl;
 
-    Surface_Analyzer* SA = new Surface_Analyzer();
+    Surface_Analyzer* SA = new Surface_Analyzer(ratioOfAnalysis, SphereContainer, in );
     std::vector<Sphere> SurfacePoints;
     SA->GetSurfacePoints(SphereContainer, SurfacePoints);
     SA->output_surfacePoints(SurfacePoints);

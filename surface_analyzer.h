@@ -32,11 +32,12 @@ class Surface_Analyzer
         }
 
 
-        Surface_Analyzer();
+        Surface_Analyzer( float ratioOfAnalysis, std::vector<Sphere>& SphereContainer, float in);
         virtual ~Surface_Analyzer();
 
 
         float x0,z0;
+        float xMax,xMin,zMin,zMax, incr;
         void GetSurfacePoints(std::vector<Sphere>& SphereContainer, std::vector<Sphere>& SurfacePoints);
 
 
