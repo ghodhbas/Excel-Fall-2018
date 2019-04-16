@@ -21,8 +21,8 @@ bool Sphere::DetectCollision(Plane& plane)
 {
     float distanceCenterFromPlane = fabs(glm::dot(plane.GetNormal(), GetPosition()) + plane.GetD());
     float distanceFromPlane = distanceCenterFromPlane - GetRadius();
-    //distanceFromPlane =  roundf(distanceFromPlane * 100) / 100;
-     if(distanceFromPlane<=0.0f)
+    distanceFromPlane =  roundf(distanceFromPlane * 100) / 100;
+     if(distanceFromPlane<=0.f)
     {
         return true;
     }
@@ -38,7 +38,7 @@ void Sphere::CollisionResponse(Plane& plane)
     SetVelocity(newDir * GetRho());
     SetPosition(GetPosition() + plane.GetNormal() * distanceFromPlane);
 
-    if(glm::length(GetVelocity()) < 0.5f){
+    if(glm::length(GetVelocity()) < 0.05){
         SetVelocity(glm::vec3(0.f,0.f,0.f));
     }
 

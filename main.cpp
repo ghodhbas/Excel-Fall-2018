@@ -1,10 +1,12 @@
 #include <stdlib.h>
 #include <math.h>
 #include <GL/glut.h>
+#include "inputreader.h"
 //full header file with functionality
 #include "environment.h"
 #include <algorithm>
 #include "surface_analyzer.h"
+
 
 #define WIDTH 1400
 #define HEIGHT 1000
@@ -16,6 +18,9 @@ float Sphere::pE = 0.8f;
 
 int main(int argc, char **argv) {
     //analysis variables, ratio and increment
+    srand (time(nullptr));
+    std::cout << "---------------INPUT Loaded----------------- " << std::endl;
+
     float ratioOfAnalysis, in;
 
 
@@ -46,18 +51,18 @@ int main(int argc, char **argv) {
         getConePoints(height);
     }else{
         //height of cone
-        float height = 100.f;
+        float height = 60.f;
         //coefficient of angle of come
-        c=1.2f;
+        c=1.5f;
         createCone(c);
         //Drag value
         physics = Physics(9.81f,0.99f);
         //Drop Height
-        dropHeight=200.f;
+        dropHeight=50.f;
         //gravity
         //eleasticity
-        Sphere::rho = 0.1f;
-        Sphere::pE = 0.7f;
+        Sphere::rho = 0.9f;
+        Sphere::pE = 0.6f;
         //number of disks
         maxSphereCount = 1000;
         //max time steps

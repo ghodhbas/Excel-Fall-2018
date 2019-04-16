@@ -61,10 +61,11 @@
 1537468984 source:/home/ghodhbas/Desktop/Excel Fall 2018/spherecontainer.cpp
 	"spherecontainer.h"
 
-1547119299 source:/home/ghodhbas/Desktop/Excel-Fall-2018/main.cpp
+1555377810 source:/home/ghodhbas/Desktop/Excel-Fall-2018/main.cpp
 	<stdlib.h>
 	<math.h>
 	<GL/glut.h>
+	"inputreader.h"
 	"environment.h"
 	<algorithm>
 	"surface_analyzer.h"
@@ -90,12 +91,12 @@
 1537468984 source:/home/ghodhbas/Desktop/Excel-Fall-2018/spherecontainer.cpp
 	"spherecontainer.h"
 
-1543549052 source:/home/ghodhbas/Desktop/Excel-Fall-2018/sphere.cpp
+1555378228 source:/home/ghodhbas/Desktop/Excel-Fall-2018/sphere.cpp
 	"sphere.h"
 	<iostream>
 	<math.h>
 
-1543551939 /home/ghodhbas/Desktop/Excel-Fall-2018/environment.h
+1555377739 /home/ghodhbas/Desktop/Excel-Fall-2018/environment.h
 	<iostream>
 	<math.h>
 	<stdio.h>
@@ -110,9 +111,9 @@
 	<glm/gtx/rotate_vector.hpp>
 	<glm/gtx/transform.hpp>
 
-1542156093 /home/ghodhbas/Desktop/Excel-Fall-2018/camera.h
+1555376030 /home/ghodhbas/Desktop/Excel-Fall-2018/camera.h
 
-1543548002 /home/ghodhbas/Desktop/Excel-Fall-2018/physics.h
+1555375164 /home/ghodhbas/Desktop/Excel-Fall-2018/physics.h
 	<glm/glm.hpp>
 	<vector>
 	<math.h>
@@ -222,4 +223,16 @@
 	"sphere.h"
 	<stdlib.h>
 	<iostream>
+
+1555362467 source:/home/ghodhbas/Desktop/Excel-Fall-2018/inputreader.cpp
+	"inputreader.h"
+
+1555362405 /home/ghodhbas/Desktop/Excel-Fall-2018/inputreader.h
+	<string>
+	<stdio.h>
+	<sstream>
+	<vector>
+	<fstream>
+	<iostream>
+	<stdlib.h>
 

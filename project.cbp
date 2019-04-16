@@ -46,6 +46,8 @@
 		<Unit filename="asa109.hpp" />
 		<Unit filename="camera.h" />
 		<Unit filename="environment.h" />
+		<Unit filename="inputreader.cpp" />
+		<Unit filename="inputreader.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="physics.cpp" />
 		<Unit filename="physics.h" />

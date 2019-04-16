@@ -16,21 +16,24 @@
 
 
 /*************************************************************************** PARAMETERS **************************************************************/
-//fame - time management
+//frame - time management
 bool showSimul= true;
 int frame=0,timebase,currenttime;
 unsigned long timeStep =0;
 unsigned long maxTimeStep=0;
 //spheres container
 std::vector<Sphere> SphereContainer;
+//radius distribution
+InputReader distribution;
+
 //Physics handler
 Physics physics(9.81f,0.99f);
 
 int maxSphereCount = 0;
 int count=0;
-float dropHeight = 200.f;
+float dropHeight = 20.f;
 
-float c = 1.2f;
+float c = 0.2f;
 glm::vec3 N(-1.f,1.f,0.f);
 Plane rp(N,0.f);
 Plane fp(N,0.f);;
@@ -45,9 +48,6 @@ void createCone(float c){
     rp = rightPlane.Normalized();
 
     //leftplane
-    //glm::mat4 rotationMat = glm::mat4(1.0); // Creates a identity matri
-    //glm::mat4 rot = glm::rotate(rotationMat, 90.0f, glm::vec3(0.0, 0.0, 1.0));
-    //glm::vec3 N2 = glm::vec3(rot * glm::vec4(rp.GetNormal(), 1.0));
     glm::vec3 N2(1.f,1.f*c,0.f);
     Plane leftPlane(N2,0);
     lp = leftPlane.Normalized();
@@ -58,8 +58,6 @@ void createCone(float c){
     bp = backPlane.Normalized();
 
     //fronntplane
-    //glm::mat4 rot3 = glm::rotate(rotationMat, 90.0f, glm::vec3(1.0, 0.0, 0.0));
-    //glm::vec3 N4 = glm::vec3(rot3 * glm::vec4(bp.GetNormal(), 1.0));
     glm::vec3 N4(0.f,1.f*c,-1.f);
     Plane frontPlane(N4,0.f);
     fp = frontPlane.Normalized();
@@ -78,16 +76,26 @@ float RandomFloat(float a, float b) {
     return a + r;
 }
 
-/*Generate Randomn Radius based on beta Distrib*/
-float RandomRadius(double alpha, double beta, float dMin, float dMax){
-    float b = log10(dMin);	//Linear rescaling factors for desired dMin, dMax range
-    float a = log10(dMax) - b;
-    //Fill in code for generating k
-    float k = (float) rand()/RAND_MAX;
-    float betaScore = (a + b - 1 - (log10(1/k))/3)/a;	//Corresponding score of beta dist
-    int ifault;	//For xinbeta() error flag, currently being ignored
-    double betaValue = xinbta(beta, alpha, log(betaScore), betaScore, ifault);	//Inverting beta dist
-    return pow(10,betaValue);	//Undo log scale
+/*Generate Randomn Radius piecewise distribution using cdf --- UNIT Millimiter*/
+float RandomRadius(){
+    int prob = rand() % 100;
+    //std::cout<< "value tested: "<<prob<<std::endl;
+    int index = distribution.get_low(prob);
+    //std::cout<< "lower bound index: "<<index<<std::endl;
+    float low_diameter ;
+    float high_diameter;
+    if (index ==0){
+        low_diameter = 0;
+        high_diameter = distribution.get_diameter(index);
+    }else{
+        low_diameter = distribution.get_diameter(index-1);
+        high_diameter = distribution.get_diameter(index);
+    }
+    //std::cout<< "lower diameter: "<<low_diameter<<std::endl;
+    //std::cout<< "high diameter:  "<<high_diameter<<std::endl;
+
+    return RandomFloat(low_diameter,high_diameter)/2;
+
 }
 
 /*Randomly creates a Sphere and add it to the container*/
@@ -96,14 +104,20 @@ void createSphere()
         if( rand() % 10 <= 1)
         {
             //randomize position
-            glm::vec3 pos(RandomFloat(-20.f,20.f),dropHeight,RandomFloat(-20.f,20.f));
+            glm::vec3 pos(RandomFloat(-20.f,20.f),dropHeight,RandomFloat(-12.f,12.f));
             //create sphere
-            float mass = RandomFloat(0.2f,0.8f);
-            //mass vol 2.4 gram per cubic cm
-            //float r = RandomRadius(0.2,0.2,1.f,5.f);
-            //float mass = r/4;
-            float r = mass*5.f;
-            SphereContainer.push_back(Sphere(pos,mass,r));
+
+
+            float r = RandomRadius(); // radius is in millimiter
+            //conver radius to cm
+            r = r/10;
+            //calculate volume in cubic cm
+            float v = (r*r*r * 3.14 *4 )/3;
+            float mass = v* 10.f; //mass vol 2.4 gram per cubic cm
+            //std::cout<< "mass: "<<mass/1000.f<<std::endl;
+            //std::cout<< "radius: "<<r/100.f<<std::endl;
+
+            SphereContainer.push_back(Sphere(pos, mass, r ));
             count++;
         }
     }
@@ -114,7 +128,7 @@ void createSphere()
 void drawGrid()
 {
     glColor3f(0.f,0.f,0.f);
-    GLfloat fExtent = 50.0f;
+    GLfloat fExtent = 30.0f;
 	GLfloat fStep = 1.0f;
     GLfloat y = 0.f;
     GLint iLine;
